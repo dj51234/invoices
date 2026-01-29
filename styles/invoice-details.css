@@ -1,0 +1,80 @@
+.invoice-details {
+  width: 100%;
+  max-width: 730px;
+
+  .invoice-details-header {
+    margin: 50px 0 32px;
+    background: var(--color-dark-blue);
+    padding: 24px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .invoice-details--status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .invoice-details-buttons {
+      display: flex;
+      gap: 16px;
+    }
+  }
+
+  .invoice-details-content {
+    background: var(--color-dark-blue);
+    padding: 48px;
+    border-radius: 10px;
+
+    .bill-from {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .bill-to {
+      display: flex;
+      gap: 96px;
+
+      .date {
+        margin-bottom: 32px;
+      }
+    }
+
+    .details-pricing {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 48px;
+      background: var(--color-dark-blue-light);
+      padding: 24px;
+      border-radius: 10px 10px 0 0;
+      gap: 85px;
+
+      .names,
+      .quantity,
+      .price,
+      .total {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 3px;
+      }
+
+      & div:nth-child(1) {
+        flex-grow: 1;
+      }
+    }
+    .amount-due {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 16px;
+      background: var(--color-black);
+      border-radius: 0 0 10px 10px;
+    }
+  }
+}

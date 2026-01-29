@@ -1,74 +1,199 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-  
-  <title>Frontend Mentor | Invoice app</title>
-</head>
-<body>
-  Invoices
-  There are <!-- Add number here --> total invoices
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/favicon-32x32.png"
+    />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <title>Invoices</title>
+  </head>
+  <body class="dark-mode">
+    <div class="main-container">
+      <div class="nav-container">
+        <div class="logo">
+          <img src="./assets/logo.svg" alt="Logo" />
+        </div>
+        <div class="bottom-nav">
+          <div class="mode-toggle">
+            <img src="./assets/icon-sun.svg" alt="Mode Toggle" />
+          </div>
+          <div class="avatar">
+            <img src="./assets/image-avatar.jpg" alt="Avatar" />
+          </div>
+        </div>
+      </div>
+      <div class="invoice-container">
+        <div class="slider show-details">
+          <div class="panel">
+            <div class="invoice-header">
+              <div class="invoice-header-left">
+                <h1 class="h-l invoice-header-left--title">Invoices</h1>
+                <p class="body-m">There are <span></span> total invoices</p>
+              </div>
+              <div class="invoice-header-right">
+                <div class="filter-container">
+                  <select name="filter" id="filter" class="h-m">
+                    <option value="" disabled selected>Filter by status</option>
+                    <option value="all">All</option>
+                    <option value="draft">Draft</option>
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                  </select>
+                </div>
+                <button class="btn btn-1 btn-1-alt">
+                  <span><i>+</i></span> New Invoice
+                </button>
+              </div>
+            </div>
+            <div class="invoice-content">
+              <!-- <div class="empty">
+            <img
+              class="empty-img"
+              src="./assets/illustration-empty.svg"
+              alt=""
+            />
+            <h2 class="h-m empty-title">There is nothing here</h2>
+            <p class="body-l empty-text">
+              Create an invoice by clicking the New Invoice button and get
+              started
+            </p>
+          </div> -->
+              <div class="invoices">
+                <div class="invoice">
+                  <div class="invoice-left">
+                    <h3 class="h-s">#RT3080</h3>
+                    <p class="date body-m">Due 19 Aug 2021</p>
+                    <p class="name body-m">Jensen Huang</p>
+                  </div>
+                  <div class="invoice-right">
+                    <h3 class="amount h-s">£ 1,800.90</h3>
+                    <button class="btn-status h-s paid">Paid</button>
+                    <img src="./assets/icon-arrow-right.svg" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="invoice-details">
+              <button class="btn-back h-s">
+                <img src="./assets/icon-arrow-left.svg" alt="" />
+                Go back
+              </button>
+              <div class="invoice-details-header">
+                <div class="invoice-details--status">
+                  <p class="status body-m">Status</p>
+                  <button class="btn-status paid">Paid</button>
+                </div>
+                <div class="invoice-details-buttons">
+                  <button class="btn btn-4">Edit</button>
+                  <button class="btn btn-5">Delete</button>
+                  <button class="btn btn-1">Mark as Paid</button>
+                </div>
+              </div>
+              <div class="invoice-details-content">
+                <div class="details-info">
+                  <div class="details-info-top">
+                    <div class="bill-from">
+                      <div class="bill-from-title">
+                        <h3 class="h-s">#RT3080</h3>
+                        <p class="item-name body-m">Graphic Design Service</p>
+                      </div>
+                      <div class="from-address">
+                        <p class="body-m">
+                          19 Union Street<br />London<br />E1 3EZ<br />United
+                          Kingdom
+                        </p>
+                      </div>
+                    </div>
+                    <div class="bill-to">
+                      <div class="date-due">
+                        <div class="date">
+                          <p class="body-m">Invoice Date</p>
+                          <h3 class="h-s">21 August 2021</h3>
+                        </div>
+                        <div class="due">
+                          <p class="body-m">Payment Due</p>
+                          <h3 class="h-s">20 September 2021</h3>
+                        </div>
+                      </div>
+                      <div class="bill-to-address">
+                        <p class="bill-to-address--title body-m">Bill To</p>
+                        <p class="h-s">Alex Grim</p>
+                        <p class="body-m">
+                          84 Church Way<br />Bradford<br />BD1 9PB<br />United
+                          Kingdom
+                        </p>
+                      </div>
+                      <div class="sent-to">
+                        <p class="body-m">Sent to</p>
+                        <h3 class="h-s">alexgrim@mail.com</h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="details-info-bottom"></div>
+                </div>
+                <div class="details-pricing">
+                  <div class="item-names">
+                    <p class="body-m">Item Name</p>
+                    <div class="names">
+                      <p class="h-s">Item Name</p>
+                      <p class="h-s">Item Name</p>
+                    </div>
+                  </div>
+                  <div class="item-quantity">
+                    <p class="body-m">QTY.</p>
+                    <div class="quantity">
+                      <p class="h-s">1</p>
+                      <p class="h-s">2</p>
+                    </div>
+                  </div>
+                  <div class="item-price">
+                    <p class="body-m">Price</p>
+                    <div class="price">
+                      <p class="h-s">£ 1,800.90</p>
+                      <p class="h-s">£ 1,800.90</p>
+                    </div>
+                  </div>
+                  <div class="item-total">
+                    <p class="body-m">Total</p>
+                    <div class="total">
+                      <p class="h-s">£ 1,800.90</p>
+                      <p class="h-s">£ 1,800.90</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="amount-due">
+                  <p class="body-m">Amount Due</p>
+                  <h3 class="h-m">£ 1,800.90</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="container"> -->
+    <!-- Invoices There are -->
+    <!-- Add number here -->
+    <!-- total invoices Filter by status Draft Pending Paid New Invoice -->
 
-  Filter by status
-  Draft
-  Pending
-  Paid
-  
-  New Invoice
+    <!-- No invoices -->
+    <!-- There is nothing here Create an invoice by clicking the New Invoice button and get started -->
+    <!-- No invoices end -->
 
-  <!-- No invoices -->
-  There is nothing here
-  Create an invoice by clicking the New Invoice button and get started
-  <!-- No invoices end -->
-
-  <!-- Create new invoice form -->
-  Go back
-
-  New Invoice
-  
-  Bill From
-  
-  Street Address
-  City
-  Post Code
-  Country
-  
-  Bill To
-  
-  Client's Name
-  Client's Email
-  e.g. email@example.com
-  Street Address
-  City
-  Post Code
-  Country
-  
-  Invoice Date
-  
-  Payment Terms
-  Net 1 day
-  Net 7 days
-  Net 14 days
-  Net 30 days
-  
-  Project Description
-  e.g. Graphic Design Service
-  
-  Item List
-  
-  Item Name
-  Qty.
-  Price
-  Total
-  
-  Add New Item
-  
-  Discard
-  Save as Draft
-  Save & Send
-  <!-- Create new invoice end -->
-</body>
+    <!-- Create new invoice form -->
+    <!-- Go back New Invoice Bill From Street Address City Post Code Country Bill To
+    Client's Name Client's Email e.g. email@example.com Street Address City Post
+    Code Country Invoice Date Payment Terms Net 1 day Net 7 days Net 14 days Net
+    30 days Project Description e.g. Graphic Design Service Item List Item Name
+    Qty. Price Total Add New Item Discard Save as Draft Save & Send -->
+    <!-- Create new invoice end -->
+  </body>
 </html>

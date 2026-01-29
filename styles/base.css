@@ -1,0 +1,226 @@
+/* 1. Root Variables - Colors & Typography */
+:root {
+  /* Colors */
+  --color-primary: #7c5dfa;
+  --color-primary-light: #9277ff;
+  --color-dark-blue: #1e2139;
+  --color-dark-blue-light: #252945;
+  --color-light-gray: #dfe3fa;
+  --color-gray: #888eb0;
+  --color-gray-blue: #7e88c3;
+  --color-black: #0c0e16;
+  --color-danger: #ec5757;
+  --color-danger-light: #9277ff; /* Based on color palette img */
+  --color-bg-light: #f8f8fb;
+  --color-bg-dark: #141625;
+
+  /* Typography */
+  --font-main: 'League Spartan', sans-serif;
+}
+
+/* 2. Global Reset & Base */
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg-light);
+  color: var(--color-black);
+  margin: 0;
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode {
+  background-color: var(--color-bg-dark);
+  color: white;
+}
+
+/* 3. Typography Classes */
+.h-l {
+  font-size: 36px;
+  line-height: 33px;
+  letter-spacing: -1px;
+  font-weight: 700;
+}
+.h-m {
+  font-size: 24px;
+  line-height: 22px;
+  letter-spacing: -0.75px;
+  font-weight: 700;
+}
+.h-s {
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: -0.25px;
+  font-weight: 700;
+}
+.body-m {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.1px;
+  font-weight: 500;
+}
+.body-s {
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -0.25px;
+  font-weight: 500;
+}
+
+/* 4. Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border-radius: 24px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-1 {
+  background: var(--color-primary);
+  color: white;
+
+  span {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: white;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    vertical-align: middle;
+
+    i {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      transform: translateY(-2px);
+      font-style: normal;
+    }
+  }
+}
+.btn-1:hover {
+  background: var(--color-primary-light);
+}
+
+.btn-1-alt {
+  padding: 8px 18px 8px 8px;
+}
+.btn-2 {
+  background: var(--color-primary);
+  color: white;
+} /* Similar to btn-1 but no icon */
+
+.btn-3 {
+  background: #f9fafe;
+  color: var(--color-gray-blue);
+}
+.btn-3:hover {
+  background: var(--color-light-gray);
+}
+
+.btn-4 {
+  background: var(--color-dark-blue-light);
+  color: var(--color-gray-blue);
+}
+.btn-4:hover {
+  background: var(--color-black);
+}
+
+.btn-5 {
+  background: var(--color-danger);
+  color: white;
+}
+.btn-5:hover {
+  background: #ff9797;
+}
+
+.btn-6 {
+  background: #f9fafe;
+  color: var(--color-gray-blue);
+  width: 100%;
+}
+.btn-6:hover {
+  background: var(--color-light-gray);
+}
+
+.btn-status {
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  min-width: 120px;
+  align-self: stretch;
+  cursor: pointer;
+  &.paid {
+    background: #1f2b3f;
+    color: #33d69f;
+  }
+  &.pending {
+    background: #2b2736;
+    color: #ff8f00;
+  }
+  &.draft {
+    background: #292c44;
+    color: #dfe3fa;
+  }
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border: none;
+  background: none;
+  color: #ffffff;
+  cursor: pointer;
+  transition: gap 0.2s ease;
+
+  &:hover {
+    gap: 20px;
+    img {
+    }
+  }
+}
+
+/* 5. Form Elements */
+.form-group {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-gray-blue);
+  font-size: 13px;
+}
+
+input,
+select:not('#filter') {
+  width: 100%;
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--color-light-gray);
+  font-family: var(--font-main);
+  font-weight: 700;
+  background: white;
+}
+
+.dark-mode input,
+.dark-mode select:not('#filter') {
+  background: var(--color-dark-blue);
+  border: 1px solid var(--color-dark-blue-light);
+  color: white;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--color-primary-light);
+}
+
+body {
+  background: red;
+}
