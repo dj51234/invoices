@@ -1,163 +1,177 @@
+/* Container & Layout */
 .invoice-container {
   width: 100%;
   overflow: hidden;
   margin: 75px auto;
   padding-left: 103px;
-
   position: relative;
   flex-grow: 1;
-  .slider {
-    display: flex;
-    width: 200%;
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    &.show-details {
-      transform: translateX(-50%);
+/* Slider Mechanism */
+.invoice-container .slider {
+  display: flex;
+  width: 200%;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-      .panel {
-        &:first-child {
-          opacity: 0;
-        }
-        &:last-child {
-          opacity: 1;
-        }
-      }
-    }
-  }
+.invoice-container .slider.show-details {
+  transform: translateX(-50%);
+}
 
-  .panel {
-    width: 50%;
-    flex-shrink: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: opacity 1s ease;
+/* Panels & Visibility Logic */
+.invoice-container .panel {
+  width: 50%;
+  flex-shrink: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 1s ease;
+}
 
-    &:first-child {
-      opacity: 1;
-    }
-    &:last-child {
-      opacity: 0;
-    }
-  }
+.invoice-container .panel:first-child {
+  opacity: 1;
+}
 
-  .invoice-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 730px;
+.invoice-container .panel:last-child {
+  opacity: 0;
+}
 
-    .invoice-header-left {
-      .invoice-header-left--title {
-        margin-bottom: 0;
-      }
-    }
+/* Panel State when Slider is Active */
+.invoice-container .slider.show-details .panel:first-child {
+  opacity: 0;
+}
 
-    .invoice-header-right {
-      display: flex;
-      gap: 48px;
+.invoice-container .slider.show-details .panel:last-child {
+  opacity: 1;
+}
 
-      .filter-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
+/* Header Section */
+.invoice-container .invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 730px;
+}
 
-      .filter-container {
-        #filter {
-          cursor: pointer;
-          width: 130px;
-          background: none;
-          background-image: url('../assets/icon-arrow-down.svg');
-          background-repeat: no-repeat;
-          background-position: right;
-          border: none;
-          color: white;
-          font-size: 15px;
-          font-weight: 700;
-          line-height: 15px;
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-        }
-      }
-    }
-  }
+.invoice-container .invoice-header-left--title {
+  margin-bottom: 0;
+}
 
-  .invoice-content {
-    display: flex;
-    margin-top: 72px;
-    height: 100%;
-    width: 100%;
-    max-width: 730px;
+.invoice-container .invoice-header-right {
+  display: flex;
+  gap: 48px;
+}
 
-    .invoices {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      width: 100%;
-      max-width: 730px;
+/* Filter Styling */
+.invoice-container .filter-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-      .invoice {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 24px;
-        background: #1e2139;
-        border-radius: 16px;
-        cursor: pointer;
-        transform: translateY(0);
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease,
-          border 0.2s ease;
-        border: 1px solid transparent;
+.invoice-container #filter {
+  cursor: pointer;
+  width: 130px;
+  background: none;
+  background-image: url('../assets/icon-arrow-down.svg');
+  background-repeat: no-repeat;
+  background-position: right;
+  border: none;
 
-        &:hover {
-          transform: translateY(-2px);
-          border: 1px solid var(--color-primary);
-          box-shadow:
-            0 0 2px #7c5dfa28,
-            0 0 4px #7c5dfa28,
-            0 0 6px #7c5dfa28,
-            0 0 8px #7c5dfa28;
-        }
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 
-        .invoice-left {
-          display: flex;
-          align-items: center;
-          gap: 48px;
-        }
+.dark-mode .invoice-container #filter {
+  color: white;
+}
 
-        .invoice-right {
-          display: flex;
-          gap: 24px;
-          align-items: center;
-        }
+/* Invoice List Content */
+.invoice-container .invoice-content {
+  display: flex;
+  margin-top: 72px;
+  height: 100%;
+  width: 100%;
+  max-width: 730px;
+}
 
-        .btn-status {
-          cursor: pointer;
-        }
-      }
-    }
-    .empty {
-      text-align: center;
-      margin: 75px auto 0;
+.invoice-container .invoices {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 730px;
+}
 
-      .empty-img {
-        margin-bottom: 48px;
-      }
+/* Individual Invoice Card */
+.invoice-container .invoice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  cursor: pointer;
+  transform: translateY(0);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border 0.2s ease;
+  border: 1px solid transparent;
+}
 
-      .empty-title {
-        margin-bottom: 28px;
-      }
+.dark-mode .invoice-container .invoice {
+  background: #1e2139;
+}
 
-      p {
-        max-width: 28ch;
-        line-height: 24px;
-      }
-    }
-  }
+.invoice-container .invoice:hover {
+  transform: translateY(-2px);
+  border: 1px solid var(--color-primary);
+  box-shadow:
+    0 0 2px #7c5dfa28,
+    0 0 4px #7c5dfa28,
+    0 0 6px #7c5dfa28,
+    0 0 8px #7c5dfa28;
+}
+
+.invoice-container .invoice-left {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.invoice-container .invoice-right {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.invoice-container .btn-status {
+  cursor: pointer;
+}
+
+/* Empty State */
+.invoice-container .empty {
+  text-align: center;
+  margin: 75px auto 0;
+}
+
+.invoice-container .empty-img {
+  margin-bottom: 48px;
+}
+
+.invoice-container .empty-title {
+  margin-bottom: 28px;
+}
+
+.invoice-container .empty p {
+  max-width: 28ch;
+  line-height: 24px;
 }

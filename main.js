@@ -1,20 +1,17 @@
-const slider = document.querySelector('.slider')
-let showingDetails = slider.classList.contains('show-details')
+import InvoiceForm from './InvoiceForm.js'
+import Slider from './Slider.js'
 
-const invoiceDetailsBtnBack = document.querySelector(
-  '.invoice-details .btn-back',
-)
-const invoicesDiv = document.querySelector('.invoices')
+const invoiceForm = new InvoiceForm()
+const slider = new Slider()
 
-invoicesDiv.addEventListener('click', (e) => {
-  const targetInvoice = e.target.closest('.invoice')
-  toggleSlider()
-})
-invoiceDetailsBtnBack.addEventListener('click', () => {
-  toggleSlider()
-})
+const toggleBtn = document.querySelector('.mode-toggle')
 
-function toggleSlider() {
-  slider.classList.toggle('show-details', !showingDetails)
-  showingDetails = !showingDetails
+function toggleMode(e) {
+  document.body.classList.toggle('dark-mode')
+  const isDarkMode = document.body.classList.contains('dark-mode')
+  toggleBtn.querySelector('img').src = isDarkMode
+    ? './assets/icon-sun.svg'
+    : './assets/icon-moon.svg'
 }
+
+toggleBtn.addEventListener('click', toggleMode)

@@ -1,9 +1,175 @@
+/* Drawer Base */
 .form-drawer {
   position: fixed;
   top: 0;
   left: 103px;
+  width: 719px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 1;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%);
+}
+.dark-mode .form-drawer {
+  background: var(--color-bg-dark);
+}
+.form-drawer.is-visible {
+  transform: translateX(0);
+}
+
+/* Internal Wrappers */
+.form-drawer .form-wrapper {
+  padding: 56px 56px 100px 56px;
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.dark-mode .form-drawer .form-wrapper .body-s {
+  color: var(--color-light-gray);
+}
+
+.form-drawer .form-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 32px 32px 32px 56px;
+  width: calc(719px - 20px);
+  height: 100px;
+  background: #ffffff;
+  z-index: 1;
+}
+
+.dark-mode .form-drawer .form-controls {
+  background: var(--color-bg-dark);
+}
+
+/* Groups & Generic Inputs */
+.form-drawer .form-group {
+  margin-block: 24px;
+}
+
+.form-drawer .add-item {
   width: 100%;
-  max-width: calc(719px - 103px);
+  margin-top: 24px;
+}
+
+.form-drawer label > input,
+.form-drawer label > select {
+  margin-top: 10px;
+}
+
+/* Item List Specifics */
+.form-drawer .item-total {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 15%;
+}
+
+.form-drawer .delete-item {
+  vertical-align: middle;
+  align-self: center;
+  flex-basis: 5%;
+  cursor: pointer;
+  color: var(--color-gray-blue);
+}
+
+.form-drawer .center-input > label {
+  flex-basis: 50%;
+}
+
+/* Invoice Form Rows */
+.form-drawer #invoice-form .form-row {
+  display: flex;
+}
+
+.form-drawer #invoice-form .form-row--from-address {
+  gap: 50px;
+}
+
+.form-drawer #invoice-form .form-row--to-address {
+  gap: 50px;
+}
+.form-drawer #invoice-form .item-list-title {
+  color: var(--color-another-gray);
+}
+.form-drawer #invoice-form .form-row--item-list {
+  gap: 12px;
+  position: relative;
+}
+
+.form-drawer #invoice-form .form-row--item-list > label {
+  margin-bottom: 0;
+}
+
+.form-drawer #invoice-form .form-row--item-list label:first-child {
+  flex-basis: 50%;
+}
+
+.form-drawer #invoice-form .form-row--item-list label:nth-child(2) {
+  flex-basis: 10%;
+}
+
+.form-drawer #invoice-form .form-row--item-list label:nth-child(3) {
+  flex-basis: 20%;
+}
+
+.form-drawer #invoice-form .form-row--item-list i {
+  top: 50%;
+  position: absolute;
+  right: 0;
+  color: var(--color-gray);
+}
+
+.form-drawer #invoice-form .form-row--dual {
+  gap: 12px;
+}
+
+.form-drawer #invoice-form .form-row--dual > label {
+  flex-basis: 50%;
+}
+
+/* Form Overlay */
+.form-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  background-color: var(--color-bg-dark);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.form-overlay.is-visible {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Buttons and Logic */
+.form-control-btns {
+  display: none;
+  gap: 10px;
+}
+
+.form-control-btns--new .btn:nth-child(2) {
+  margin-left: auto;
+}
+
+.form-control-btns--edit {
+  justify-content: flex-end;
+}
+
+/* State Handlers (New vs Edit) */
+.form-drawer[data-mode='new'] .form-control-btns--new {
+  display: flex;
+}
+
+.form-drawer[data-mode='edit'] .form-control-btns--edit {
+  display: flex;
 }
