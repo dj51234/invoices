@@ -1,0 +1,9 @@
+.form-drawer {
+  position: fixed;
+  top: 0;
+  left: 103px;
+  width: 100%;
+  max-width: calc(719px - 103px);
+  height: 100%;
+  background-color: var(--color-bg-dark);
+}

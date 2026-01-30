@@ -154,7 +154,7 @@ body.dark-mode {
   border-radius: 5px;
   min-width: 120px;
   align-self: stretch;
-  cursor: pointer;
+
   &.paid {
     background: #1f2b3f;
     color: #33d69f;
@@ -181,9 +181,11 @@ body.dark-mode {
 
   &:hover {
     gap: 20px;
-    img {
-    }
   }
+}
+
+span.title-hash {
+  color: var(--color-gray);
 }
 
 /* 5. Form Elements */
