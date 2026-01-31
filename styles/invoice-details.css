@@ -35,6 +35,20 @@
   gap: 16px;
 }
 
+.invoice-container .invoice-details-buttons--mobile {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding-block: 12px 24px;
+  background-color: #fff;
+  width: 100%;
+}
+
+.dark-mode .invoice-container .invoice-details-buttons--mobile {
+  background-color: var(--color-dark-blue);
+}
+
 /* Content Body */
 .invoice-details-content {
   background: #ffffff;
@@ -55,11 +69,16 @@
 
 .invoice-details-content .bill-to {
   display: flex;
+  flex-direction: row;
   gap: 96px;
 }
 
 .invoice-details-content .bill-to .date {
   margin-bottom: 32px;
+}
+
+.invoice-container .details-info-top .sent-to-mobile {
+  display: none;
 }
 
 /* Pricing Table Area */

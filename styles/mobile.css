@@ -3,6 +3,8 @@
   .main-container {
     flex-direction: column;
   }
+
+  /* nav */
   .nav-container {
     flex-direction: row;
     align-items: center;
@@ -39,7 +41,7 @@
     margin-inline: 20px;
     border-top: none;
   }
-
+  /* form */
   .form-drawer {
     left: 0;
     width: 616px;
@@ -55,12 +57,152 @@
     width: calc(616px - 20px);
   }
 
+  /* invoices */
   .invoice-container {
     padding-left: 0;
 
     max-width: 768px;
     padding: 20px;
   }
+
+  .invoice-container .invoices .invoice-left {
+    gap: 32px;
+  }
 }
-@media (max-width: 365px) {
+@media (max-width: 700px) {
+  .invoice-container .details-info-top .bill-from {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .invoice-container .details-info-top .sent-to-mobile {
+    display: block;
+  }
+  .invoice-container .details-info-top .sent-to {
+    display: none;
+  }
+  .invoice-details-content .details-pricing {
+    gap: 36px;
+  }
+}
+@media (max-width: 666px) {
+  .invoice-container .invoice .invoice-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+  }
+  .invoice-container .invoice .invoice-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .invoice-container .invoice img {
+    display: none;
+  }
+
+  .invoice-container .invoice-right .btn-status {
+    padding-block: 10px;
+  }
+}
+@media (max-width: 612px) {
+  .form-drawer {
+    left: 0;
+    width: 100%;
+  }
+
+  .form-drawer .form-controls {
+    width: 100%;
+    padding: 0;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media (max-width: 585px) {
+  .invoice-details-content {
+    border-radius: 0;
+    padding: 15px;
+  }
+  .invoice-container #filter {
+    width: 86px;
+  }
+
+  .invoice-container .invoice-header .invoice-header-right {
+    gap: 24px;
+  }
+
+  .invoice-details-header .invoice-details-buttons {
+    display: none;
+  }
+
+  .invoice-container .invoice-details-buttons--mobile {
+    display: flex;
+  }
+
+  .invoice-details-header .invoice-details--status {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .form-drawer #invoice-form .form-row--item-list label:first-child {
+    flex-basis: 100%;
+  }
+
+  .form-drawer #invoice-form .form-row--item-list {
+    flex-wrap: wrap;
+  }
+
+  .form-drawer #invoice-form .form-row--item-list label:nth-child(2),
+  .form-drawer #invoice-form .form-row--item-list label:nth-child(3) {
+    flex-basis: 30%;
+  }
+
+  .form-drawer .item-total {
+    flex-basis: 20%;
+  }
+  .form-drawer #invoice-form .form-row--item-list i {
+    top: 75%;
+  }
+
+  .form-drawer #invoice-form .form-row--from-address,
+  .form-drawer #invoice-form .form-row--to-address {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0px;
+  }
+
+  .form-drawer #invoice-form .form-row--to-address label:last-child,
+  .form-drawer #invoice-form .form-row--from-address label:last-child {
+    flex-basis: 100%;
+  }
+
+  .form-drawer #invoice-form .form-row--to-address label:first-child,
+  .form-drawer #invoice-form .form-row--to-address label:nth-child(2),
+  .form-drawer #invoice-form .form-row--from-address label:first-child,
+  .form-drawer #invoice-form .form-row--from-address label:nth-child(2) {
+    flex-basis: 48%;
+  }
+
+  .form-drawer #invoice-form .form-row--dual {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 479px) {
+  .invoice-details-content .bill-to {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-drawer .form-wrapper {
+    padding: 20px 20px 100px 20px;
+  }
+}
+@media (max-width: 380px) {
+  .btn {
+    padding: 10px 20px;
+  }
 }

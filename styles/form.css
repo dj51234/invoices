@@ -100,6 +100,7 @@
 .form-drawer #invoice-form .form-row--item-list {
   gap: 12px;
   position: relative;
+  flex-wrap: nowrap;
 }
 
 .form-drawer #invoice-form .form-row--item-list > label {

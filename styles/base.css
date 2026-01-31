@@ -36,6 +36,13 @@ body {
   transition: background-color 0.3s ease;
 }
 
+body.noscroll,
+html.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
 body.dark-mode {
   background-color: var(--color-bg-dark);
   color: white;
@@ -308,4 +315,44 @@ select:not(#filter) {
 input:focus {
   outline: none;
   border-color: var(--color-primary-light);
+}
+
+@media screen and (max-width: 585px) {
+  .h-l {
+    font-size: 24px;
+    line-height: 21px;
+    letter-spacing: -1px;
+    font-weight: 700;
+  }
+  .h-m {
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: -0.75px;
+    font-weight: 700;
+  }
+  .h-s {
+    font-size: 15px;
+    line-height: 24px;
+    letter-spacing: -0.25px;
+    font-weight: 700;
+  }
+  .body-m {
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.1px;
+    font-weight: 500;
+    color: var(--color-gray-blue);
+  }
+  .body-s {
+    font-size: 13px;
+    line-height: 15px;
+    letter-spacing: -0.25px;
+    font-weight: 500;
+    color: var(--color-gray-blue);
+  }
+
+  .btn {
+    font-size: 13px;
+    /* padding: 12px 20px; */
+  }
 }

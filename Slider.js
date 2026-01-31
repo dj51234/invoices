@@ -1,7 +1,10 @@
+import { wait } from './utils.js'
+
 export default class Slider {
   constructor() {
     this.elements = {
       slider: document.querySelector('.slider'),
+      panels: document.querySelectorAll('.panel'),
       invoicesDiv: document.querySelector('.invoices'),
       detailsBtnBack: document.querySelector('.invoice-details .btn-back'),
     }
@@ -18,14 +21,31 @@ export default class Slider {
     invoicesDiv.addEventListener('click', this.toggleSlider.bind(this))
     detailsBtnBack.addEventListener('click', this.toggleSlider.bind(this))
   }
-  toggleSlider() {
-    // toggle slider visibility
-    this.elements.slider.classList.toggle(
-      'show-details',
-      !this.state.showingDetails,
-    )
+  async toggleSlider() {
+    const [listPanel, detailsPanel] = this.elements.panels
 
-    // flip slider visibility state
-    this.state.showingDetails = !this.state.showingDetails
+    const isClosing = this.state.showingDetails
+
+    if (isClosing) {
+      listPanel.classList.remove('panel-invisible')
+
+      detailsPanel.classList.add('panel-invisible')
+
+      this.elements.slider.classList.remove('show-details')
+      await wait(500)
+      detailsPanel.classList.add('panel-hide')
+
+      this.state.showingDetails = false
+    } else {
+      detailsPanel.classList.remove('panel-hide')
+
+      detailsPanel.classList.remove('panel-invisible')
+
+      this.elements.slider.classList.add('show-details')
+
+      listPanel.classList.add('panel-invisible')
+
+      this.state.showingDetails = true
+    }
   }
 }
