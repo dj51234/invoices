@@ -68,7 +68,6 @@ export default class InvoiceForm {
       saveSendBtn,
       listItemsContainer,
       invoiceList,
-      confirmDeleteBtn,
       deleteInvoiceBtns,
     } = this.elements
 
@@ -91,6 +90,7 @@ export default class InvoiceForm {
         this.promptDelete()
       })
     })
+    listItemsContainer.addEventListener('input', (e) => this.handleItemInput(e))
   }
 
   // form toggle
@@ -140,7 +140,7 @@ export default class InvoiceForm {
     // wait for form to finish animating to avoid noscroll blocking scrollTo
     await wait(1000)
     // clear list items on close
-    this.elements.listItemsContainer.innerHTML = ''
+    // this.elements.listItemsContainer.innerHTML = ''
 
     // lock background scroll
     if (isOpening) {
@@ -206,28 +206,18 @@ export default class InvoiceForm {
 
   // details list items logic
   addListItem(e) {
-    e.preventDefault()
+    if (e) e.preventDefault()
 
     // create list item element and add to form
     const listItemEl = document.createElement('div')
     listItemEl.classList.add('form-list-item', 'form-row', 'form-row--item-list')
     listItemEl.innerHTML = `
-    <label for="item-name" class="body-s"
-      >Item Name<input type="text" name="item-name"
-    /></label>
-
-    <label for="item-qty" class="body-s"
-      >Qty<input type="number" name="item-qty"
-    /></label>
-
-    <label for="item-price" class="body-s"
-      >Price<input type="number" name="item-price"
-    /></label>
+    <input type="text" name="item-name"/>
+    <input type="number" name="item-qty"/>
+    <input type="number" name="item-price"/>
     <div class="item-total">
-      <label for="item-total" class="body-s">Total</label>
-      <p class="h-s">0</p>
+      <p class="h-s">$0.00</p>
     </div>
-
     <i class="delete-item fa-sharp fa-solid fa-trash-can"></i>
     `
     this.elements.listItemsContainer.appendChild(listItemEl)
@@ -377,5 +367,17 @@ export default class InvoiceForm {
 
   formatStatus(status) {
     return status.charAt(0).toUpperCase() + status.slice(1)
+  }
+
+  formatCurrency(amt) {
+    return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amt)
+  }
+
+  handleItemInput(e) {
+    const row = e.target.closest('.form-list-item')
+    const qty = Number(row.querySelector('input[name="item-qty"').value) || 0
+    const price = Number(row.querySelector('input[name="item-price"').value) || 0
+    const total = qty * price
+    row.querySelector('.item-total p ').textContent = this.formatCurrency(total)
   }
 }

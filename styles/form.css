@@ -102,29 +102,40 @@
   gap: 12px;
   position: relative;
   flex-wrap: nowrap;
+  margin-top: 16px;
+  align-items: center;
 }
 
 .form-drawer #invoice-form .form-row--item-list > label {
   margin-bottom: 0;
 }
 
-.form-drawer #invoice-form .form-row--item-list label:first-child {
-  flex-basis: 50%;
+.form-drawer #invoice-form .form-row label[for='item-name'],
+.form-drawer #invoice-form .form-row input[name='item-name'] {
+  flex-basis: 40%;
 }
 
-.form-drawer #invoice-form .form-row--item-list label:nth-child(2) {
+.form-drawer #invoice-form .form-row label[for='item-qty'],
+.form-drawer #invoice-form .form-row input[name='item-qty'] {
   flex-basis: 10%;
 }
 
-.form-drawer #invoice-form .form-row--item-list label:nth-child(3) {
+.form-drawer #invoice-form .form-row label[for='item-price'],
+.form-drawer #invoice-form .form-row input[name='item-price'] {
   flex-basis: 20%;
 }
 
+.form-drawer #invoice-form .form-row label[for='item-total'],
+.form-drawer #invoice-form .form-row input[name='item-total'] {
+  flex-basis: 15%;
+}
+
 .form-drawer #invoice-form .form-row--item-list i {
-  top: 50%;
-  position: absolute;
-  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--color-gray);
+  transition: color 0.2s ease;
 }
 
 .form-drawer #invoice-form .form-row--dual {
