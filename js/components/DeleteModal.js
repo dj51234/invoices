@@ -11,6 +11,7 @@ export default class DeleteModal {
     this.deleteInvoiceBtns.forEach((btn) => btn.addEventListener('click', this.open.bind(this)))
     this.cancelBtn.addEventListener('click', this.close.bind(this))
     this.dialogue.addEventListener('click', this.closeOnOverlayClick.bind(this))
+    this.confirmBtn.addEventListener('click', this.deleteInvoice.bind(this))
   }
   open(e) {
     e.preventDefault()

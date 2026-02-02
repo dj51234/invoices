@@ -58,7 +58,13 @@ export default class InvoiceService {
         country: invoiceData.clientCountry,
       },
       total: this.formatCurrency(this.calculateTotal(invoiceData.items)),
-      items: invoiceData.items,
+      items: invoiceData.items.map((item) => {
+        return {
+          ...item,
+          price: this.formatCurrency(item.price),
+          total: this.formatCurrency(item.price * item.quantity),
+        }
+      }),
     }
 
     this.invoices.push(newInvoice)
@@ -68,5 +74,10 @@ export default class InvoiceService {
   }
   saveInvoices() {
     localStorage.setItem('invoices', JSON.stringify(this.invoices))
+  }
+  deleteInvoice(id) {
+    const filteredInvoices = this.invoices.filter((invoice) => invoice.id !== id)
+    this.invoices = filteredInvoices
+    this.saveInvoices()
   }
 }

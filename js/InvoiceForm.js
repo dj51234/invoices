@@ -14,8 +14,24 @@ export default class InvoiceForm {
       invoiceList: document.querySelector('#invoice-list'),
       listItemsContainer: document.querySelector('#form-list-items'),
       formTitle: document.querySelector('#form-title'),
-      invoiceDetails: document.querySelector('.invoice-details'),
+      invoiceDetailsContainer: document.querySelector('.invoice-details'),
       empty: document.querySelector('.empty'),
+
+      // invoice details elements
+      invoiceItemNames: document.querySelector('#invoice-item-names'),
+      invoiceItemQuantities: document.querySelector('#invoice-item-quantities'),
+      invoiceItemPrices: document.querySelector('#invoice-item-prices'),
+      invoiceItemTotals: document.querySelector('#invoice-item-totals'),
+      invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
+      statusBtn: document.querySelector('#invoice-details-status'),
+      invoiceDetailsId: document.querySelector('#invoice-details-id'),
+      invoiceDetailsDescription: document.querySelector('#invoice-details-description'),
+      fromAddress: document.querySelector('#invoice-details-from-address'),
+      date: document.querySelector('#invoice-details-date'),
+      paymentDue: document.querySelector('#invoice-details-payment-due'),
+      clientName: document.querySelector('#invoice-details-client-name'),
+      clientAddress: document.querySelector('#invoice-details-client-address'),
+      clientEmails: document.querySelectorAll('.invoice-details-client-email'),
 
       // buttons
       addItemBtn: document.querySelector('.add-item'),
@@ -25,6 +41,8 @@ export default class InvoiceForm {
       cancelBtn: document.querySelector('.cancel-btn'),
       newInvoiceBtn: document.querySelector('.new-invoice'),
       editInvoiceBtns: document.querySelectorAll('.edit-invoice'),
+      deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
+      confirmDeleteBtn: document.querySelector('#confirm-delete-btn'),
     }
 
     // state
@@ -48,6 +66,7 @@ export default class InvoiceForm {
       saveSendBtn,
       listItemsContainer,
       invoiceList,
+      confirmDeleteBtn,
     } = this.elements
 
     // form toggles
@@ -62,6 +81,7 @@ export default class InvoiceForm {
     saveSendBtn.addEventListener('click', (e) => this.addInvoice(e))
     listItemsContainer.addEventListener('click', (e) => this.deleteListItem(e))
     invoiceList.addEventListener('click', (e) => this.renderInvoiceDetails(e))
+    confirmDeleteBtn.addEventListener('click', (e) => this.deleteInvoice(e))
   }
   async toggleForm(e) {
     // determine if form is opening or closing and if user scrolled past nav
@@ -161,6 +181,13 @@ export default class InvoiceForm {
 
     this.toggleForm()
   }
+  deleteInvoice(e) {
+    e.preventDefault()
+
+    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+    this.service.deleteInvoice(invoiceId)
+    this.renderInvoices()
+  }
   addListItem(e) {
     e.preventDefault()
 
@@ -199,49 +226,89 @@ export default class InvoiceForm {
   }
   renderInvoiceDetails(e) {
     e.preventDefault()
-
-    // get invoice id and invoice
+    const {
+      statusBtn,
+      invoiceDetailsId,
+      invoiceDetailsDescription,
+      fromAddress,
+      date,
+      paymentDue,
+      clientName,
+      clientAddress,
+      clientEmails,
+      invoiceItemNames,
+      invoiceItemQuantities,
+      invoiceItemPrices,
+      invoiceItemTotals,
+      invoiceDetailsAmountDue,
+      invoiceDetailsContainer,
+    } = this.elements
+    // get invoice id and invoice, set data id to invoice details container
     const invoiceId = e.target.closest('.invoice').dataset.id
     const invoice = this.service.getInvoiceById(invoiceId)
+    invoiceDetailsContainer.dataset.id = invoiceId
 
     // update details status btn
-    const statusBtn = document.querySelector('#invoice-details-status')
     statusBtn.textContent = this.formatStatus(invoice.status)
     statusBtn.classList = `btn-status h-s ${invoice.status}`
 
     // update invoice details id
-    const idEl = document.querySelector('#invoice-details-id')
-    idEl.textContent = invoice.id
+    invoiceDetailsId.textContent = invoice.id
 
     // update invoice details description
-    const descriptionEl = document.querySelector('#invoice-details-description')
-    descriptionEl.textContent = invoice.description
+    invoiceDetailsDescription.textContent = invoice.description
 
     // update invoice details from address
-    const fromAddressEl = document.querySelector('#invoice-details-from-address')
-    fromAddressEl.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}<br>${invoice.senderAddress.zipCode}<br>${invoice.senderAddress.country}`
+    fromAddress.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}<br>${invoice.senderAddress.zipCode}<br>${invoice.senderAddress.country}`
 
     // update invoice details date
-    const dateEl = document.querySelector('#invoice-details-date')
-    dateEl.textContent = this.formatDate(invoice.createdAt)
+    date.textContent = this.formatDate(invoice.createdAt)
 
     // update invoice details payment due
-    const paymentDueEl = document.querySelector('#invoice-details-payment-due')
-    paymentDueEl.textContent = this.formatDate(invoice.paymentDue)
+    paymentDue.textContent = this.formatDate(invoice.paymentDue)
 
     // update invoice details client name
-    const clientNameEl = document.querySelector('#invoice-details-client-name')
-    clientNameEl.textContent = invoice.clientName
+    clientName.textContent = invoice.clientName
 
     // update invoice details client address
-    const clientAddressEl = document.querySelector('#invoice-details-client-address')
-    clientAddressEl.innerHTML = `${invoice.clientAddress.street}<br>${invoice.clientAddress.city}<br>${invoice.clientAddress.zipCode}<br>${invoice.clientAddress.country}`
+    clientAddress.innerHTML = `${invoice.clientAddress.street}<br>${invoice.clientAddress.city}<br>${invoice.clientAddress.zipCode}<br>${invoice.clientAddress.country}`
 
     // update invoice details client email
-    const clientEmailEls = document.querySelectorAll('.invoice-details-client-email')
-    clientEmailEls.forEach((el) => {
+    clientEmails.forEach((el) => {
       el.textContent = invoice.clientEmail
     })
+
+    // clear invoice items
+    invoiceItemNames.innerHTML = ''
+    invoiceItemQuantities.innerHTML = ''
+    invoiceItemPrices.innerHTML = ''
+    invoiceItemTotals.innerHTML = ''
+
+    // for each item in the invoice, render to details table
+    invoice.items.forEach((item) => {
+      const nameEl = document.createElement('p')
+      nameEl.classList.add('h-s')
+      nameEl.textContent = item.name
+      invoiceItemNames.appendChild(nameEl)
+
+      const qtyEl = document.createElement('p')
+      qtyEl.classList.add('h-s')
+      qtyEl.textContent = item.quantity
+      invoiceItemQuantities.appendChild(qtyEl)
+
+      const priceEl = document.createElement('p')
+      priceEl.classList.add('h-s')
+      priceEl.textContent = item.price
+      invoiceItemPrices.appendChild(priceEl)
+
+      const totalEl = document.createElement('p')
+      totalEl.classList.add('h-s')
+      totalEl.textContent = item.total
+      invoiceItemTotals.appendChild(totalEl)
+    })
+
+    // update invoice details amount due
+    invoiceDetailsAmountDue.textContent = invoice.total
   }
   formatDate(date) {
     return new Date(date).toLocaleDateString('en-GB', {
@@ -268,6 +335,7 @@ export default class InvoiceForm {
     // clear list before rendering
     this.elements.invoiceList.innerHTML = ''
 
+    // render invoices
     this.service.invoices.forEach((invoice) => {
       const invoiceElement = document.createElement('div')
       invoiceElement.classList.add('invoice')

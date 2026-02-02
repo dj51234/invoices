@@ -67,6 +67,10 @@
   margin-bottom: 24px;
 }
 
+.invoice-details-content .bill-from #invoice-details-from-address {
+  text-align: right;
+}
+
 .invoice-details-content .bill-to {
   display: flex;
   flex-direction: row;
