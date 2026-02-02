@@ -24,14 +24,10 @@ export default class InvoiceForm {
       invoiceItemQuantities: document.querySelector('#invoice-item-quantities'),
       invoiceItemPrices: document.querySelector('#invoice-item-prices'),
       invoiceItemTotals: document.querySelector('#invoice-item-totals'),
-      invoiceDetailsAmountDue: document.querySelector(
-        '#invoice-details-amount-due',
-      ),
+      invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
       statusBtn: document.querySelector('#invoice-details-status'),
       invoiceDetailsId: document.querySelector('#invoice-details-id'),
-      invoiceDetailsDescription: document.querySelector(
-        '#invoice-details-description',
-      ),
+      invoiceDetailsDescription: document.querySelector('#invoice-details-description'),
       fromAddress: document.querySelector('#invoice-details-from-address'),
       date: document.querySelector('#invoice-details-date'),
       paymentDue: document.querySelector('#invoice-details-payment-due'),
@@ -78,9 +74,7 @@ export default class InvoiceForm {
 
     // form toggles
     newInvoiceBtn.addEventListener('click', this.toggleForm.bind(this))
-    editInvoiceBtns.forEach((btn) =>
-      btn.addEventListener('click', this.toggleForm.bind(this)),
-    )
+    editInvoiceBtns.forEach((btn) => btn.addEventListener('click', this.toggleForm.bind(this)))
     discardBtn.addEventListener('click', this.toggleForm.bind(this))
     cancelBtn.addEventListener('click', this.toggleForm.bind(this))
     formOverlay.addEventListener('click', this.toggleForm.bind(this))
@@ -98,6 +92,8 @@ export default class InvoiceForm {
       })
     })
   }
+
+  // form toggle
   async toggleForm(e) {
     // determine if form is opening or closing and if user scrolled past nav
     const isOpening = !this.state.showingForm
@@ -155,6 +151,8 @@ export default class InvoiceForm {
       document.documentElement.classList.remove('noscroll')
     }
   }
+
+  // adding and deleting invoices
   addInvoice(e) {
     e.preventDefault()
 
@@ -162,8 +160,7 @@ export default class InvoiceForm {
     const formData = new FormData(this.elements.form)
 
     // get list items
-    const listItems =
-      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
 
     // convert list items to array of objects
     const listItemData = [...listItems].map((item) => {
@@ -197,27 +194,34 @@ export default class InvoiceForm {
 
     this.toggleForm()
   }
+  promptDelete() {
+    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+
+    this.deleteModal.open(invoiceId, () => {
+      this.service.deleteInvoice(invoiceId)
+      this.renderInvoices()
+      document.dispatchEvent(new Event('invoice-deleted'))
+    })
+  }
+
+  // details list items logic
   addListItem(e) {
     e.preventDefault()
 
     // create list item element and add to form
     const listItemEl = document.createElement('div')
-    listItemEl.classList.add(
-      'form-list-item',
-      'form-row',
-      'form-row--item-list',
-    )
+    listItemEl.classList.add('form-list-item', 'form-row', 'form-row--item-list')
     listItemEl.innerHTML = `
     <label for="item-name" class="body-s"
-      >Item Name<input type="text" id="item-name" name="item-name"
+      >Item Name<input type="text" name="item-name"
     /></label>
 
     <label for="item-qty" class="body-s"
-      >Qty<input type="number" id="item-qty" name="item-qty"
+      >Qty<input type="number" name="item-qty"
     /></label>
 
     <label for="item-price" class="body-s"
-      >Price<input type="number" id="item-price" name="item-price"
+      >Price<input type="number" name="item-price"
     /></label>
     <div class="item-total">
       <label for="item-total" class="body-s">Total</label>
@@ -237,6 +241,8 @@ export default class InvoiceForm {
       itemToDelete.closest('.form-list-item').remove()
     }
   }
+
+  // rendering
   renderInvoiceDetails(e) {
     e.preventDefault()
     const {
@@ -256,6 +262,7 @@ export default class InvoiceForm {
       invoiceDetailsAmountDue,
       invoiceDetailsContainer,
     } = this.elements
+
     // get invoice id and invoice, set data id to invoice details container
     const invoiceId = e.target.closest('.invoice').dataset.id
     const invoice = this.service.getInvoiceById(invoiceId)
@@ -323,18 +330,6 @@ export default class InvoiceForm {
     // update invoice details amount due
     invoiceDetailsAmountDue.textContent = invoice.total
   }
-  formatDate(date) {
-    return new Date(date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      timeZone: 'UTC',
-    })
-  }
-
-  formatStatus(status) {
-    return status.charAt(0).toUpperCase() + status.slice(1)
-  }
 
   renderInvoices() {
     // hide or show empty state
@@ -369,13 +364,18 @@ export default class InvoiceForm {
       this.elements.invoiceList.appendChild(invoiceElement)
     })
   }
-  promptDelete() {
-    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
 
-    this.deleteModal.open(() => {
-      this.service.deleteInvoice(invoiceId)
-      this.renderInvoices()
-      document.dispatchEvent(new Event('invoice-deleted'))
+  // helpers
+  formatDate(date) {
+    return new Date(date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
     })
+  }
+
+  formatStatus(status) {
+    return status.charAt(0).toUpperCase() + status.slice(1)
   }
 }

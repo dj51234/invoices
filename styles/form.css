@@ -2,7 +2,7 @@
 .form-drawer {
   position: fixed;
   top: 0;
-  left: 103px;
+  left: 90px;
   width: 719px;
   height: 100vh;
   background: #ffffff;
@@ -13,6 +13,7 @@
   overflow: hidden;
   transition: transform 0.3s ease-in-out;
   transform: translateX(-100%);
+  border-radius: 0 16px 16px 0;
 }
 .dark-mode .form-drawer {
   background: var(--color-bg-dark);
@@ -23,7 +24,7 @@
 
 /* Internal Wrappers */
 .form-drawer .form-wrapper {
-  padding: 56px 56px 100px 56px;
+  padding: 56px 56px 100px 69px;
   position: relative;
   flex: 1;
   overflow-y: auto;

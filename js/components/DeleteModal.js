@@ -3,6 +3,7 @@ export default class DeleteModal {
     this.dialogue = document.getElementById('delete-modal')
     this.cancelBtn = document.getElementById('cancel-delete-btn')
     this.confirmBtn = document.getElementById('confirm-delete-btn')
+    this.invoiceId = document.getElementById('delete-invoice-id')
 
     // confirm delete callback
     this.onConfirm = null
@@ -11,7 +12,7 @@ export default class DeleteModal {
   init() {
     this.cancelBtn.addEventListener('click', this.close.bind(this))
     this.dialogue.addEventListener('click', this.closeOnOverlayClick.bind(this))
-    this.confirmBtn.addEventListener('click', () => {
+    this.confirmBtn.addEventListener('click', (e) => {
       e.preventDefault()
 
       if (this.onConfirm) {
@@ -21,7 +22,10 @@ export default class DeleteModal {
       this.close(e)
     })
   }
-  open(confirmCallback) {
+  open(invoiceId, confirmCallback) {
+    if (this.invoiceId) {
+      this.invoiceId.textContent = invoiceId
+    }
     this.onConfirm = confirmCallback
     this.dialogue.showModal()
   }
