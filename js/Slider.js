@@ -20,6 +20,12 @@ export default class Slider {
     // details toggle
     invoicesDiv.addEventListener('click', this.toggleSlider.bind(this))
     detailsBtnBack.addEventListener('click', this.toggleSlider.bind(this))
+
+    document.addEventListener('invoice-deleted', () => {
+      if (this.state.showingDetails) {
+        this.toggleSlider()
+      }
+    })
   }
   async toggleSlider() {
     const [listPanel, detailsPanel] = this.elements.panels

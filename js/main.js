@@ -3,13 +3,11 @@ import Slider from './Slider.js'
 import DatePicker from './components/DatePicker.js'
 import FilterDropdown from './components/FilterDropdown.js'
 import SelectDropdown from './components/SelectDropdown.js'
-import DeleteModal from './components/DeleteModal.js'
 import InvoiceService from './InvoiceService.js'
 
 const invoiceService = new InvoiceService()
 new InvoiceForm(invoiceService)
 new Slider()
-new DeleteModal()
 
 const datePickerEl = document.querySelector('#invoice-date-picker')
 const filterDropdownEl = document.querySelector('.filter-dropdown')

@@ -1,8 +1,10 @@
 import { wait } from './utils.js'
+import DeleteModal from './components/DeleteModal.js'
 
 export default class InvoiceForm {
   constructor(invoiceService) {
     this.service = invoiceService
+    this.deleteModal = new DeleteModal()
 
     // elements
     this.elements = {
@@ -22,10 +24,14 @@ export default class InvoiceForm {
       invoiceItemQuantities: document.querySelector('#invoice-item-quantities'),
       invoiceItemPrices: document.querySelector('#invoice-item-prices'),
       invoiceItemTotals: document.querySelector('#invoice-item-totals'),
-      invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
+      invoiceDetailsAmountDue: document.querySelector(
+        '#invoice-details-amount-due',
+      ),
       statusBtn: document.querySelector('#invoice-details-status'),
       invoiceDetailsId: document.querySelector('#invoice-details-id'),
-      invoiceDetailsDescription: document.querySelector('#invoice-details-description'),
+      invoiceDetailsDescription: document.querySelector(
+        '#invoice-details-description',
+      ),
       fromAddress: document.querySelector('#invoice-details-from-address'),
       date: document.querySelector('#invoice-details-date'),
       paymentDue: document.querySelector('#invoice-details-payment-due'),
@@ -42,7 +48,7 @@ export default class InvoiceForm {
       newInvoiceBtn: document.querySelector('.new-invoice'),
       editInvoiceBtns: document.querySelectorAll('.edit-invoice'),
       deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
-      confirmDeleteBtn: document.querySelector('#confirm-delete-btn'),
+      deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
     }
 
     // state
@@ -67,11 +73,14 @@ export default class InvoiceForm {
       listItemsContainer,
       invoiceList,
       confirmDeleteBtn,
+      deleteInvoiceBtns,
     } = this.elements
 
     // form toggles
     newInvoiceBtn.addEventListener('click', this.toggleForm.bind(this))
-    editInvoiceBtns.forEach((btn) => btn.addEventListener('click', this.toggleForm.bind(this)))
+    editInvoiceBtns.forEach((btn) =>
+      btn.addEventListener('click', this.toggleForm.bind(this)),
+    )
     discardBtn.addEventListener('click', this.toggleForm.bind(this))
     cancelBtn.addEventListener('click', this.toggleForm.bind(this))
     formOverlay.addEventListener('click', this.toggleForm.bind(this))
@@ -81,7 +90,13 @@ export default class InvoiceForm {
     saveSendBtn.addEventListener('click', (e) => this.addInvoice(e))
     listItemsContainer.addEventListener('click', (e) => this.deleteListItem(e))
     invoiceList.addEventListener('click', (e) => this.renderInvoiceDetails(e))
-    confirmDeleteBtn.addEventListener('click', (e) => this.deleteInvoice(e))
+
+    deleteInvoiceBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault()
+        this.promptDelete()
+      })
+    })
   }
   async toggleForm(e) {
     // determine if form is opening or closing and if user scrolled past nav
@@ -147,7 +162,8 @@ export default class InvoiceForm {
     const formData = new FormData(this.elements.form)
 
     // get list items
-    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const listItems =
+      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
 
     // convert list items to array of objects
     const listItemData = [...listItems].map((item) => {
@@ -181,19 +197,16 @@ export default class InvoiceForm {
 
     this.toggleForm()
   }
-  deleteInvoice(e) {
-    e.preventDefault()
-
-    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
-    this.service.deleteInvoice(invoiceId)
-    this.renderInvoices()
-  }
   addListItem(e) {
     e.preventDefault()
 
     // create list item element and add to form
     const listItemEl = document.createElement('div')
-    listItemEl.classList.add('form-list-item', 'form-row', 'form-row--item-list')
+    listItemEl.classList.add(
+      'form-list-item',
+      'form-row',
+      'form-row--item-list',
+    )
     listItemEl.innerHTML = `
     <label for="item-name" class="body-s"
       >Item Name<input type="text" id="item-name" name="item-name"
@@ -354,6 +367,15 @@ export default class InvoiceForm {
         <img src="./assets/icon-arrow-right.svg" alt="" />
       </div>`
       this.elements.invoiceList.appendChild(invoiceElement)
+    })
+  }
+  promptDelete() {
+    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+
+    this.deleteModal.open(() => {
+      this.service.deleteInvoice(invoiceId)
+      this.renderInvoices()
+      document.dispatchEvent(new Event('invoice-deleted'))
     })
   }
 }
