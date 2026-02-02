@@ -356,3 +356,14 @@ input:focus {
     /* padding: 12px 20px; */
   }
 }
+
+/* errors */
+.form-drawer .form-wrapper .body-s.error {
+  color: var(--color-danger);
+}
+.form-drawer .form-wrapper .body-s.error input {
+  border-color: var(--color-danger);
+}
+.form-drawer .form-wrapper .body-s.error .select-trigger {
+  border-color: var(--color-danger);
+}

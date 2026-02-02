@@ -1,0 +1,104 @@
+/* custom filter */
+.filter-dropdown {
+  position: relative; /* Anchor for the menu */
+  cursor: pointer;
+  user-select: none;
+  min-width: 150px; /* Give it space */
+}
+
+.filter-dropdown .filter-trigger {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.filter-dropdown .arrow {
+  transform: rotate(0deg);
+}
+.filter-dropdown.active .arrow {
+  transform: rotate(180deg);
+}
+
+.filter-dropdown .filter-menu {
+  position: absolute;
+  top: calc(100% + 20px);
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 192px;
+  border-radius: 4px;
+  background: #fff;
+  padding: 24px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 50;
+}
+
+.dark-mode .filter-dropdown .filter-menu {
+  background: var(--color-dark-blue-light);
+}
+
+.filter-dropdown.active .filter-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+.filter-dropdown .filter-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.filter-dropdown .filter-option:hover {
+  color: var(--color-primary);
+}
+
+.filter-dropdown .filter-option:last-child {
+  margin-bottom: 0;
+}
+
+.filter-dropdown .filter-checkbox {
+  appearance: none;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.filter-dropdown .custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--color-light-gray);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dark-mode .filter-dropdown .custom-checkbox {
+  background: var(--color-dark-blue);
+}
+.filter-dropdown .filter-option:hover .custom-checkbox {
+  border-color: var(--color-primary);
+}
+
+.filter-dropdown .filter-checkbox:checked + .custom-checkbox {
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.filter-dropdown .custom-checkbox::after {
+  content: url('../../assets/icon-check.svg');
+  opacity: 0;
+}
+
+.filter-dropdown .filter-checkbox:checked + .custom-checkbox::after {
+  opacity: 1;
+}

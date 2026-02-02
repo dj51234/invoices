@@ -1,0 +1,86 @@
+/* custom select */
+.form-drawer label > .custom-select {
+  margin-top: 10px; /* Matches your existing inputs */
+  width: 100%; /* Ensures it fills the 50% flex column */
+  position: relative;
+}
+
+.custom-select .select-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid var(--color-light-gray);
+  color: var(--color-black);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+.custom-select.open .select-trigger {
+  border: 1px solid #7c5dfa;
+}
+
+.custom-select .select-options {
+  position: absolute;
+  top: calc(100% + 8px); /* 8px gap below the trigger */
+  left: 0;
+  width: 100%;
+  border-radius: 4px;
+  background: white;
+  border: 1px solid var(--color-light-gray);
+  color: var(--color-black);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border 0.2s ease;
+  z-index: 10;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
+}
+
+.custom-select.open .select-options {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.custom-select .option {
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.custom-select .option:hover {
+  color: var(--color-primary);
+}
+
+.custom-select .option:last-child {
+  border-bottom: none;
+}
+
+.dark-mode .custom-select .select-trigger {
+  background: var(--color-dark-blue);
+  border: 1px solid var(--color-dark-blue-light);
+  color: white;
+}
+
+.dark-mode .custom-select .select-options {
+  background: var(--color-dark-blue);
+  border: 1px solid var(--color-dark-blue-light);
+  color: white;
+}
+
+.dark-mode .custom-select .option {
+  border-bottom: 1px solid var(--color-dark-blue-light);
+}

@@ -1,0 +1,72 @@
+export default class InvoiceService {
+  constructor() {
+    this.invoices = JSON.parse(localStorage.getItem('invoices')) || []
+  }
+
+  getInvoices() {
+    return this.invoices
+  }
+
+  getInvoiceById(id) {
+    return this.invoices.find((invoice) => invoice.id === id)
+  }
+  generateId() {
+    const randomLetter = () => Math.floor(Math.random() * 26) + 65
+    const randomNum = () => String(Math.floor(Math.random() * 10000)).padStart(4, '0')
+    return `${String.fromCharCode(randomLetter())}${String.fromCharCode(randomLetter())}${randomNum()}`
+  }
+  formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount)
+  }
+  calculatePaymentDue(createdAt, paymentTerms) {
+    const date = new Date(createdAt)
+    const terms = parseInt(paymentTerms)
+
+    date.setDate(date.getDate() + terms)
+    return new Intl.DateTimeFormat('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(date)
+  }
+  calculateTotal(items) {
+    return items.reduce((total, item) => total + item.price * item.quantity, 0)
+  }
+  addInvoice(invoiceData) {
+    const newInvoice = {
+      id: this.generateId(),
+      createdAt: invoiceData.createdAt,
+      paymentDue: this.calculatePaymentDue(invoiceData.createdAt, invoiceData.paymentTerms),
+      description: invoiceData.description,
+      paymentTerms: invoiceData.paymentTerms,
+      clientName: invoiceData.clientName,
+      clientEmail: invoiceData.clientEmail,
+      status: 'pending',
+      senderAddress: {
+        street: invoiceData.senderStreet,
+        city: invoiceData.senderCity,
+        zipCode: invoiceData.senderZipCode,
+        country: invoiceData.senderCountry,
+      },
+      clientAddress: {
+        street: invoiceData.clientStreet,
+        city: invoiceData.clientCity,
+        zipCode: invoiceData.clientZipCode,
+        country: invoiceData.clientCountry,
+      },
+      total: this.formatCurrency(this.calculateTotal(invoiceData.items)),
+      items: invoiceData.items,
+    }
+
+    this.invoices.push(newInvoice)
+    this.saveInvoices()
+
+    return newInvoice
+  }
+  saveInvoices() {
+    localStorage.setItem('invoices', JSON.stringify(this.invoices))
+  }
+}

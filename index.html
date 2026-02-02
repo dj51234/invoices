@@ -4,12 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon-32x32.png"
-    />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -31,135 +26,114 @@
             <form id="invoice-form">
               <div class="form-group">
                 <h2 class="body-m highlight">Bill From</h2>
-                <label for="invoice-title" class="body-s"
-                  >Street Address<input
-                    type="text"
-                    id="street-address"
-                    name="from-street-address"
+                <label for="from-street-address" class="body-s"
+                  >Street Address<input type="text" id="from-street-address" name="senderStreet"
                 /></label>
 
                 <div class="form-row form-row--from-address">
-                  <label for="invoice-title" class="body-s"
-                    >City<input type="text" id="city" name="from-city"
+                  <label for="from-city" class="body-s"
+                    >City<input type="text" id="from-city" name="senderCity"
                   /></label>
 
-                  <label for="invoice-title" class="body-s"
-                    >Post Code<input
-                      type="text"
-                      id="post-code"
-                      name="from-post-code"
+                  <label for="sender-zip-code" class="body-s"
+                    >Post Code<input type="text" id="sender-zip-code" name="senderZipCode"
                   /></label>
 
-                  <label for="invoice-title" class="body-s"
-                    >State / Country<input
-                      type="text"
-                      id="state-country"
-                      name="from-state-country"
+                  <label for="sender-country" class="body-s"
+                    >State / Country<input type="text" id="sender-country" name="senderCountry"
                   /></label>
                 </div>
               </div>
 
               <div class="form-group">
                 <h2 class="body-m highlight">Bill To</h2>
-                <label for="to-client-name" class="body-s"
-                  >Client Name<input
-                    type="text"
-                    id="to-client-name"
-                    name="to-client-name"
+                <label for="client-name" class="body-s"
+                  >Client Name<input type="text" id="client-name" name="clientName"
                 /></label>
 
-                <label for="to-client-email" class="body-s"
-                  >Client Email<input
-                    type="email"
-                    id="to-client-email"
-                    name="to-client-email"
+                <label for="client-email" class="body-s"
+                  >Client Email<input type="email" id="client-email" name="clientEmail"
                 /></label>
-                <label for="invoice-title" class="body-s"
-                  >Street Address<input
-                    type="text"
-                    id="street-address"
-                    name="from-street-address"
+                <label for="client-street" class="body-s"
+                  >Street Address<input type="text" id="client-street" name="clientStreet"
                 /></label>
 
                 <div class="form-row form-row--to-address">
-                  <label for="invoice-title" class="body-s"
-                    >City<input type="text" id="city" name="from-city" />
+                  <label for="client-city" class="body-s"
+                    >City<input type="text" id="client-city" name="clientCity" />
                   </label>
-                  <label for="invoice-title" class="body-s"
-                    >Post Code<input
-                      type="text"
-                      id="post-code"
-                      name="from-post-code"
+                  <label for="client-zip-code" class="body-s"
+                    >Post Code<input type="text" id="client-zip-code" name="clientZipCode"
                   /></label>
-                  <label for="invoice-title" class="body-s"
-                    >State / Country<input
-                      type="text"
-                      id="state-country"
-                      name="from-state-country"
+                  <label for="client-country" class="body-s"
+                    >State / Country<input type="text" id="client-country" name="clientCountry"
                   /></label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="form-row form-row--dual">
-                  <label for="invoice-date" class="body-s"
-                    >Invoice Date<input
-                      type="date"
-                      id="invoice-date"
-                      name="invoice-date"
-                  /></label>
+                  <label class="body-s">
+                    Invoice Date
+                    <div class="custom-date-picker" id="invoice-date-picker">
+                      <input type="hidden" name="createdAt" id="invoice-date-hidden" />
+
+                      <div class="date-trigger">
+                        <span class="selected-date">19 Aug 2021</span>
+                        <img
+                          src="./assets/icon-calendar.svg"
+                          class="calendar-icon"
+                          alt="calendar"
+                        />
+                      </div>
+
+                      <div class="calendar-popup">
+                        <div class="calendar-header">
+                          <img
+                            src="./assets/icon-arrow-left.svg"
+                            class="prev-month"
+                            alt="Previous"
+                          />
+                          <span class="current-month-display">Aug 2021</span>
+                          <img src="./assets/icon-arrow-right.svg" class="next-month" alt="Next" />
+                        </div>
+
+                        <div class="calendar-grid"></div>
+                      </div>
+                    </div>
+                  </label>
 
                   <label for="payment-terms" class="body-s"
-                    >Payment Terms<select
-                      name="payment-terms"
-                      id="payment-terms"
-                      name="payment-terms"
-                    >
-                      <option value="14 days">14 days</option>
-                      <option value="30 days">30 days</option>
-                      <option value="60 days">60 days</option>
-                    </select></label
+                    >Payment Terms
+                    <div class="custom-select" id="payment-terms-select">
+                      <input type="hidden" id="payment-terms" name="paymentTerms" value="30" />
+
+                      <div class="select-trigger">
+                        <span class="selected-value">Next 30 Days</span>
+                        <img src="./assets/icon-arrow-down.svg" class="arrow" alt="arrow" />
+                      </div>
+
+                      <div class="select-options">
+                        <div class="option" data-value="1">Next 1 Day</div>
+                        <div class="option" data-value="7">Next 7 Days</div>
+                        <div class="option" data-value="14">Next 14 Days</div>
+                        <div class="option selected" data-value="30">Next 30 Days</div>
+                      </div>
+                    </div></label
                   >
                 </div>
               </div>
               <label
                 for="project-desc
             "
-                >Project Description<input
-                  type="text"
-                  id="project-desc"
-                  name="project-desc"
+                >Project Description<input type="text" id="project-desc" name="description"
               /></label>
 
               <div class="form-group">
                 <h2 class="h-s item-list-title">Item List</h2>
-                <div class="form-row form-row--item-list">
-                  <label for="item-name" class="body-s"
-                    >Item Name<input
-                      type="text"
-                      id="item-name"
-                      name="item-name"
-                  /></label>
-
-                  <!-- <div class="center-input"> -->
-                  <label for="item-qty" class="body-s"
-                    >Qty<input type="number" id="item-qty" name="item-qty"
-                  /></label>
-                  <!-- </div> -->
-                  <label for="item-price" class="body-s"
-                    >Price<input
-                      type="number"
-                      id="item-price"
-                      name="item-price"
-                  /></label>
-                  <div class="item-total">
-                    <label for="item-total" class="body-s">Total</label>
-                    <p class="h-s">0</p>
-                  </div>
-
-                  <i class="delete-item fa-sharp fa-solid fa-trash-can"></i>
-                </div>
+                <div id="form-list-items"></div>
                 <button class="btn btn-4 add-item">Add Item</button>
               </div>
+              <div class="form-errors"></div>
             </form>
             <div class="form-controls">
               <div class="form-control-btns form-control-btns--new">
@@ -197,14 +171,31 @@
                 <p class="body-m">There are <span></span> total invoices</p>
               </div>
               <div class="invoice-header-right">
-                <div class="filter-container">
-                  <select name="filter" id="filter" class="h-m">
-                    <option value="" disabled selected>Filter by status</option>
-                    <option value="all">All</option>
-                    <option value="draft">Draft</option>
-                    <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
-                  </select>
+                <div class="filter-dropdown" id="filter-dropdown">
+                  <div class="filter-trigger">
+                    <span class="trigger-text">Filter by status</span>
+                    <img src="./assets/icon-arrow-down.svg" class="arrow" alt="arrow" />
+                  </div>
+
+                  <div class="filter-menu">
+                    <label class="filter-option h-s">
+                      <input type="checkbox" value="draft" class="filter-checkbox" />
+                      <span class="custom-checkbox"></span>
+                      <span class="option-text">Draft</span>
+                    </label>
+
+                    <label class="filter-option h-s">
+                      <input type="checkbox" value="pending" class="filter-checkbox" />
+                      <span class="custom-checkbox"></span>
+                      <span class="option-text">Pending</span>
+                    </label>
+
+                    <label class="filter-option h-s">
+                      <input type="checkbox" value="paid" class="filter-checkbox" />
+                      <span class="custom-checkbox"></span>
+                      <span class="option-text">Paid</span>
+                    </label>
+                  </div>
                 </div>
                 <button class="btn btn-1 btn-1-alt new-invoice">
                   <span><i>+</i></span> New Invoice
@@ -212,34 +203,14 @@
               </div>
             </div>
             <div class="invoice-content">
-              <!-- <div class="empty">
-            <img
-              class="empty-img"
-              src="./assets/illustration-empty.svg"
-              alt=""
-            />
-            <h2 class="h-m empty-title">There is nothing here</h2>
-            <p class="body-l empty-text">
-              Create an invoice by clicking the New Invoice button and get
-              started
-            </p>
-          </div> -->
-              <div class="invoices">
-                <div class="invoice">
-                  <div class="invoice-left">
-                    <h3 class="h-s"><span class="title-hash">#</span>RT3080</h3>
-                    <p class="date body-m">Due 19 Aug 2021</p>
-                    <p class="name body-m">Jensen Huang</p>
-                  </div>
-                  <div class="invoice-right">
-                    <h3 class="amount h-s">£ 1,800.90</h3>
-                    <button class="btn-status h-s paid">
-                      <span> <span class="dot"></span> Paid</span>
-                    </button>
-                    <img src="./assets/icon-arrow-right.svg" alt="" />
-                  </div>
-                </div>
+              <div class="empty">
+                <img class="empty-img" src="./assets/illustration-empty.svg" alt="" />
+                <h2 class="h-m empty-title">There is nothing here</h2>
+                <p class="body-l empty-text">
+                  Create an invoice by clicking the New Invoice button and get started
+                </p>
               </div>
+              <div class="invoices" id="invoice-list"></div>
             </div>
           </div>
           <div class="panel panel-hide panel-invisible">
@@ -251,7 +222,7 @@
               <div class="invoice-details-header">
                 <div class="invoice-details--status">
                   <p class="status body-m">Status</p>
-                  <button class="btn-status h-s paid">Paid</button>
+                  <button id="invoice-details-status" class="btn-status h-s"></button>
                 </div>
                 <div class="invoice-details-buttons">
                   <button class="btn btn-4 edit-invoice">Edit</button>
@@ -265,44 +236,46 @@
                     <div class="bill-from">
                       <div class="bill-from-title">
                         <h3 class="h-s">
-                          <span class="title-hash">#</span>RT3080
+                          <span class="title-hash">#</span><span id="invoice-details-id"></span>
                         </h3>
-                        <p class="item-name body-m">Graphic Design Service</p>
+                        <p class="item-name body-m" id="invoice-details-description">
+                          Graphic Design Service
+                        </p>
                       </div>
                       <div class="from-address">
-                        <p class="body-m">
-                          19 Union Street<br />London<br />E1 3EZ<br />United
-                          Kingdom
-                        </p>
+                        <p class="body-m" id="invoice-details-from-address"></p>
                       </div>
                     </div>
                     <div class="bill-to">
                       <div class="date-due">
                         <div class="date">
                           <p class="body-m">Invoice Date</p>
-                          <h3 class="h-s">21 August 2021</h3>
+                          <h3 id="invoice-details-date" class="h-s"></h3>
                         </div>
                         <div class="due">
                           <p class="body-m">Payment Due</p>
-                          <h3 class="h-s">20 September 2021</h3>
+                          <h3 id="invoice-details-payment-due" class="h-s"></h3>
                         </div>
                       </div>
                       <div class="bill-to-address">
                         <p class="bill-to-address--title body-m">Bill To</p>
-                        <p class="h-s">Alex Grim</p>
-                        <p class="body-m">
-                          84 Church Way<br />Bradford<br />BD1 9PB<br />United
-                          Kingdom
-                        </p>
+                        <p id="invoice-details-client-name" class="h-s"></p>
+                        <p id="invoice-details-client-address" class="body-m"></p>
                       </div>
                       <div class="sent-to">
                         <p class="body-m">Sent to</p>
-                        <h3 class="h-s">alexgrim@mail.com</h3>
+                        <h3
+                          class="h-s invoice-details-client-email"
+                          id="invoice-details-client-email"
+                        ></h3>
                       </div>
                     </div>
                     <div class="sent-to-mobile">
                       <p class="body-m">Sent to</p>
-                      <h3 class="h-s">alexgrim@mail.com</h3>
+                      <h3
+                        class="h-s invoice-details-client-email"
+                        id="invoice-details-client-email"
+                      ></h3>
                     </div>
                   </div>
                   <div class="details-info-bottom"></div>
@@ -343,9 +316,7 @@
                 </div>
               </div>
             </div>
-            <div
-              class="invoice-details-buttons invoice-details-buttons--mobile"
-            >
+            <div class="invoice-details-buttons invoice-details-buttons--mobile">
               <button class="btn btn-4 edit-invoice">Edit</button>
               <button class="btn btn-5 delete-invoice">Delete</button>
               <button class="btn btn-1 mark-paid">Mark as Paid</button>
@@ -354,7 +325,20 @@
         </div>
       </div>
     </div>
-    <script type="module" src="./main.js"></script>
+    <dialog class="delete-modal" id="delete-modal">
+      <div class="modal-content">
+        <h2 class="h-m" tabindex="-1">Confirm Deletion</h2>
+        <p class="body-m text-gray">
+          Are you sure you want to delete invoice #<span id="delete-invoice-id"></span>? This action
+          cannot be undone.
+        </p>
+        <div class="modal-actions">
+          <button class="btn btn-3" id="cancel-delete-btn">Cancel</button>
+          <button class="btn btn-5" id="confirm-delete-btn">Delete</button>
+        </div>
+      </div>
+    </dialog>
+    <script type="module" src="./js/main.js"></script>
     <!-- <div class="container"> -->
     <!-- Invoices There are -->
     <!-- Add number here -->

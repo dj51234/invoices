@@ -1,0 +1,26 @@
+.delete-modal {
+  border-radius: 10px;
+  padding: 48px;
+  width: 480px;
+  border: none;
+}
+
+.delete-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.dark-mode .delete-modal {
+  background: var(--color-dark-blue);
+  color: white;
+}
+
+.delete-modal h2:focus {
+  outline: none;
+}
