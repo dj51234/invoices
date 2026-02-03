@@ -52,13 +52,13 @@ export default class InvoiceService {
         street: invoiceData.senderStreet,
         city: invoiceData.senderCity,
         zipCode: invoiceData.senderZipCode,
-        country: invoiceData.senderCountry,
+        state: invoiceData.senderState,
       },
       clientAddress: {
         street: invoiceData.clientStreet,
         city: invoiceData.clientCity,
         zipCode: invoiceData.clientZipCode,
-        country: invoiceData.clientCountry,
+        state: invoiceData.clientState,
       },
       total: this.formatCurrency(totalRaw),
       items: invoiceData.items.map((item) => {
@@ -89,6 +89,7 @@ export default class InvoiceService {
       ...this.invoices[index],
       createdAt: invoiceData.createdAt,
       paymentDue,
+      status: invoiceData.status || this.invoices[index].status,
       paymentTerms: invoiceData.paymentTerms,
       description: invoiceData.description,
       clientName: invoiceData.clientName,
@@ -97,13 +98,13 @@ export default class InvoiceService {
         street: invoiceData.senderStreet,
         city: invoiceData.senderCity,
         zipCode: invoiceData.senderZipCode,
-        country: invoiceData.senderCountry,
+        state: invoiceData.senderState,
       },
       clientAddress: {
         street: invoiceData.clientStreet,
         city: invoiceData.clientCity,
         zipCode: invoiceData.clientZipCode,
-        country: invoiceData.clientCountry,
+        state: invoiceData.clientState,
       },
       total: this.formatCurrency(totalRaw),
       items: invoiceData.items.map((item) => {
@@ -120,5 +121,13 @@ export default class InvoiceService {
     const filteredInvoices = this.invoices.filter((invoice) => invoice.id !== id)
     this.invoices = filteredInvoices
     this.saveInvoices()
+  }
+  updateStatus(id, status) {
+    const invoice = this.getInvoiceById(id)
+
+    if (invoice) {
+      invoice.status = status
+      this.saveInvoices()
+    }
   }
 }

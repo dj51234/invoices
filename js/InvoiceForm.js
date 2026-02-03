@@ -189,9 +189,14 @@ export default class InvoiceForm {
   editInvoice(e) {
     e.preventDefault()
     if (!this.validateForm()) return
-    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
 
+    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+    const currentInvoice = this.service.getInvoiceById(invoiceId)
     const updatedData = this.getFormData()
+
+    if (currentInvoice.status === 'draft') {
+      updatedData.status = 'pending'
+    }
     this.service.updateInvoice(invoiceId, updatedData)
     this.renderInvoices()
     this.renderInvoiceDetails({ target: { closest: () => ({ dataset: { id: invoiceId } }) } })
@@ -292,7 +297,7 @@ export default class InvoiceForm {
     invoiceDetailsDescription.textContent = invoice.description
 
     // update invoice details from address
-    fromAddress.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}<br>${invoice.senderAddress.zipCode}<br>${invoice.senderAddress.country}`
+    fromAddress.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}, ${invoice.senderAddress.state}<br>${invoice.senderAddress.zipCode}`
 
     // update invoice details date
     date.textContent = this.formatDate(invoice.createdAt)
@@ -304,7 +309,7 @@ export default class InvoiceForm {
     clientName.textContent = invoice.clientName
 
     // update invoice details client address
-    clientAddress.innerHTML = `${invoice.clientAddress.street}<br>${invoice.clientAddress.city}<br>${invoice.clientAddress.zipCode}<br>${invoice.clientAddress.country}`
+    clientAddress.innerHTML = `${invoice.clientAddress.street}<br>${invoice.clientAddress.city}${invoice.clientAddress.city ? ', ' : ''}${invoice.clientAddress.state}<br>${invoice.clientAddress.zipCode}`
 
     // update invoice details client email
     clientEmails.forEach((el) => {
@@ -386,9 +391,7 @@ export default class InvoiceForm {
 
   markAsPaid() {
     const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
-    const invoice = this.service.getInvoiceById(invoiceId)
-    invoice.status = 'paid'
-    this.service.updateInvoice(invoiceId, invoice)
+    this.service.updateStatus(invoiceId, 'paid')
     this.renderInvoices()
 
     this.elements.statusBtn.textContent = 'Paid'
@@ -505,13 +508,13 @@ export default class InvoiceForm {
       senderStreet: invoice.senderAddress.street,
       senderCity: invoice.senderAddress.city,
       senderZipCode: invoice.senderAddress.zipCode,
-      senderCountry: invoice.senderAddress.country,
+      senderState: invoice.senderAddress.state,
       clientName: invoice.clientName,
       clientEmail: invoice.clientEmail,
       clientStreet: invoice.clientAddress.street,
       clientCity: invoice.clientAddress.city,
       clientZipCode: invoice.clientAddress.zipCode,
-      clientCountry: invoice.clientAddress.country,
+      clientState: invoice.clientAddress.state,
       description: invoice.description,
     }
     // loop through fields and fill inputs
