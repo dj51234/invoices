@@ -385,7 +385,3 @@ input:focus {
   gap: 10px;
   color: var(--color-danger);
 }
-
-.form-errors p {
-  break-inside: avoid;
-}

@@ -36,10 +36,13 @@ export default class InvoiceService {
     return items.reduce((total, item) => total + item.price * item.quantity, 0)
   }
   addInvoice(invoiceData) {
+    const totalRaw = this.calculateTotal(invoiceData.items)
+    const paymentDue = this.calculatePaymentDue(invoiceData.createdAt, invoiceData.paymentTerms)
+
     const newInvoice = {
       id: this.generateId(),
       createdAt: invoiceData.createdAt,
-      paymentDue: this.calculatePaymentDue(invoiceData.createdAt, invoiceData.paymentTerms),
+      paymentDue,
       description: invoiceData.description,
       paymentTerms: invoiceData.paymentTerms,
       clientName: invoiceData.clientName,
@@ -57,12 +60,12 @@ export default class InvoiceService {
         zipCode: invoiceData.clientZipCode,
         country: invoiceData.clientCountry,
       },
-      total: this.formatCurrency(this.calculateTotal(invoiceData.items)),
+      total: this.formatCurrency(totalRaw),
       items: invoiceData.items.map((item) => {
         return {
           ...item,
-          price: this.formatCurrency(item.price),
-          total: this.formatCurrency(item.price * item.quantity),
+          price: item.price,
+          total: item.price * item.quantity,
         }
       }),
     }
@@ -76,8 +79,41 @@ export default class InvoiceService {
     localStorage.setItem('invoices', JSON.stringify(this.invoices))
   }
   updateInvoice(id, invoiceData) {
-    const invoice = this.getInvoiceById(id)
-    invoice.status = invoiceData.status
+    const index = this.invoices.findIndex((invoice) => invoice.id === id)
+    if (index === -1) return
+
+    const totalRaw = this.calculateTotal(invoiceData.items)
+    const paymentDue = this.calculatePaymentDue(invoiceData.createdAt, invoiceData.paymentTerms)
+
+    this.invoices[index] = {
+      ...this.invoices[index],
+      createdAt: invoiceData.createdAt,
+      paymentDue,
+      paymentTerms: invoiceData.paymentTerms,
+      description: invoiceData.description,
+      clientName: invoiceData.clientName,
+      clientEmail: invoiceData.clientEmail,
+      senderAddress: {
+        street: invoiceData.senderStreet,
+        city: invoiceData.senderCity,
+        zipCode: invoiceData.senderZipCode,
+        country: invoiceData.senderCountry,
+      },
+      clientAddress: {
+        street: invoiceData.clientStreet,
+        city: invoiceData.clientCity,
+        zipCode: invoiceData.clientZipCode,
+        country: invoiceData.clientCountry,
+      },
+      total: this.formatCurrency(totalRaw),
+      items: invoiceData.items.map((item) => {
+        return {
+          ...item,
+          price: item.price,
+          total: item.price * item.quantity,
+        }
+      }),
+    }
     this.saveInvoices()
   }
   deleteInvoice(id) {

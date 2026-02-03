@@ -138,6 +138,10 @@
   transition: color 0.2s ease;
 }
 
+.form-drawer #invoice-form .form-row--item-list i:hover {
+  color: var(--color-danger);
+}
+
 .form-drawer #invoice-form .form-row--dual {
   gap: 12px;
 }

@@ -46,6 +46,7 @@ export default class InvoiceForm {
       deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
       deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
       markAsPaidBtn: document.querySelector('.mark-paid'),
+      saveChangesBtn: document.querySelector('.save-btn'),
     }
 
     // state
@@ -71,6 +72,7 @@ export default class InvoiceForm {
       invoiceList,
       deleteInvoiceBtns,
       markAsPaidBtn,
+      saveChangesBtn,
     } = this.elements
 
     // form toggles
@@ -95,6 +97,7 @@ export default class InvoiceForm {
 
     listItemsContainer.addEventListener('input', (e) => this.handleItemInput(e))
     markAsPaidBtn.addEventListener('click', this.markAsPaid.bind(this))
+    saveChangesBtn.addEventListener('click', (e) => this.editInvoice(e))
   }
 
   // form toggle
@@ -124,7 +127,9 @@ export default class InvoiceForm {
       // clear inputs and errors
       this.elements.form.reset()
       this.clearErrors()
-      this.elements.listItemsContainer.innerHTML = ''
+
+      const listItemRows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      listItemRows.forEach((row) => row.remove())
 
       // if new invoice button
       if (e.target === this.elements.newInvoiceBtn) {
@@ -137,6 +142,10 @@ export default class InvoiceForm {
         this.state.mode = 'edit'
         this.elements.formDrawer.dataset.mode = 'edit'
         this.elements.formTitle.textContent = 'Edit Invoice'
+
+        const id = this.elements.invoiceDetailsContainer.dataset.id
+        const invoice = this.service.getInvoiceById(id)
+        this.populateForm(invoice)
       }
     }
 
@@ -149,7 +158,6 @@ export default class InvoiceForm {
     // wait for form to finish animating to avoid noscroll blocking scrollTo
     await wait(1000)
     // clear list items on close
-    // this.elements.listItemsContainer.innerHTML = ''
 
     // lock background scroll
     if (isOpening) {
@@ -166,41 +174,23 @@ export default class InvoiceForm {
     e.preventDefault()
     if (!this.validateForm()) return
     // get form data
-    const formData = new FormData(this.elements.form)
-
-    // get list items
-    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
-
-    // convert list items to array of objects
-    const listItemData = [...listItems].map((item) => {
-      const name = item.querySelector('input[name="item-name"').value
-      const qty = item.querySelector('input[name="item-qty"').value
-      const price = item.querySelector('input[name="item-price"').value
-      return {
-        name,
-        quantity: qty,
-        price,
-      }
-    })
-
-    // append items array to data
-    formData.append('items', JSON.stringify(listItemData))
-
-    // convert items array to parsed array of objects
-    const invoice = Object.fromEntries(
-      [...formData].map(([key, value]) => {
-        if (key === 'items') {
-          return [key, JSON.parse(value)]
-        }
-
-        return [key, value]
-      }),
-    )
+    const invoiceData = this.getFormData()
 
     // add invoice to service and rerender
-    this.service.addInvoice(invoice)
+    this.service.addInvoice(invoiceData)
     this.renderInvoices()
 
+    this.toggleForm()
+  }
+  editInvoice(e) {
+    e.preventDefault()
+    if (!this.validateForm()) return
+    const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+
+    const updatedData = this.getFormData()
+    this.service.updateInvoice(invoiceId, updatedData)
+    this.renderInvoices()
+    this.renderInvoiceDetails({ target: { closest: () => ({ dataset: { id: invoiceId } }) } })
     this.toggleForm()
   }
   promptDelete() {
@@ -243,7 +233,9 @@ export default class InvoiceForm {
 
   // rendering
   renderInvoiceDetails(e) {
-    e.preventDefault()
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault()
+    }
     const {
       statusBtn,
       invoiceDetailsId,
@@ -322,12 +314,12 @@ export default class InvoiceForm {
 
       const priceEl = document.createElement('p')
       priceEl.classList.add('h-s')
-      priceEl.textContent = item.price
+      priceEl.textContent = this.formatCurrency(item.price)
       invoiceItemPrices.appendChild(priceEl)
 
       const totalEl = document.createElement('p')
       totalEl.classList.add('h-s')
-      totalEl.textContent = item.total
+      totalEl.textContent = this.formatCurrency(item.total)
       invoiceItemTotals.appendChild(totalEl)
     })
 
@@ -485,7 +477,73 @@ export default class InvoiceForm {
       errorContainer.appendChild(errorEl)
     })
   }
+  populateForm(invoice) {
+    const fields = {
+      senderStreet: invoice.senderAddress.street,
+      senderCity: invoice.senderAddress.city,
+      senderZipCode: invoice.senderAddress.zipCode,
+      senderCountry: invoice.senderAddress.country,
+      clientName: invoice.clientName,
+      clientEmail: invoice.clientEmail,
+      clientStreet: invoice.clientAddress.street,
+      clientCity: invoice.clientAddress.city,
+      clientZipCode: invoice.clientAddress.zipCode,
+      clientCountry: invoice.clientAddress.country,
+      description: invoice.description,
+    }
+    // loop through fields and fill inputs
+    Object.entries(fields).forEach(([key, value]) => {
+      const input = this.elements.form.querySelector(`input[name="${key}"]`)
+      if (input) {
+        input.value = value
+      }
+    })
+    // set date input value and visual display
+    const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
+    dateInput.value = invoice.createdAt
+
+    const dateVisual = this.elements.form.querySelector('.date-trigger .selected-date')
+    dateVisual.textContent = this.formatDate(invoice.createdAt)
+
+    // set custom payment terms
+
+    const termsInput = this.elements.form.querySelector('input[name="paymentTerms"]')
+    termsInput.value = invoice.paymentTerms
+
+    const termsVisual = this.elements.form.querySelector('.select-trigger .selected-value')
+    termsVisual.textContent = `Next ${invoice.paymentTerms} days`
+
+    // if 1 day, change to "Next 1 day"
+    if (invoice.paymentTerms === '1') termsVisual.textContent = 'Next 1 day'
+
+    invoice.items.forEach((item) => {
+      this.addListItem()
+      const rows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      const lastRow = rows[rows.length - 1]
+
+      lastRow.querySelector('input[name="item-name"]').value = item.name
+      lastRow.querySelector('input[name="item-qty"]').value = item.quantity
+      lastRow.querySelector('input[name="item-price"]').value = item.price
+
+      const fakeEvent = { target: lastRow.querySelector('input[name="item-qty"]') }
+      this.handleItemInput(fakeEvent)
+    })
+  }
   // helpers
+  getFormData() {
+    const formData = new FormData(this.elements.form)
+    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const listItemsData = [...listItems].map((item) => {
+      return {
+        name: item.querySelector('input[name="item-name"]').value,
+        quantity: item.querySelector('input[name="item-qty"]').value,
+        price: item.querySelector('input[name="item-price"]').value,
+      }
+    })
+    const invoiceData = Object.fromEntries(formData)
+    invoiceData.items = listItemsData
+    return invoiceData
+  }
   formatDate(date) {
     return new Date(date).toLocaleDateString('en-GB', {
       day: '2-digit',
@@ -510,5 +568,26 @@ export default class InvoiceForm {
     const price = Number(row.querySelector('input[name="item-price"').value) || 0
     const total = qty * price
     totalEl.textContent = this.formatCurrency(total)
+  }
+  resetCustomFormElements() {
+    const today = intl
+      .DateTimeFormat('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+      .format(new Date())
+
+    // reset createdAt
+    // reset date picker display
+    this.elements.form.querySelector('input[name="createdAt"]')
+    dateInput.value = today
+    this.elements.form.querySelector('.date-trigger .selected-date').textContent =
+      this.formatDate(today)
+
+    // reset payment terms
+    this.elements.form.querySelector('select[name="paymentTerms"]').value = '30'
+    this.elements.form.querySelector('.select trigger .selected-value').textContent = 'Next 30 days'
   }
 }
