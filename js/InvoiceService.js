@@ -75,6 +75,11 @@ export default class InvoiceService {
   saveInvoices() {
     localStorage.setItem('invoices', JSON.stringify(this.invoices))
   }
+  updateInvoice(id, invoiceData) {
+    const invoice = this.getInvoiceById(id)
+    invoice.status = invoiceData.status
+    this.saveInvoices()
+  }
   deleteInvoice(id) {
     const filteredInvoices = this.invoices.filter((invoice) => invoice.id !== id)
     this.invoices = filteredInvoices

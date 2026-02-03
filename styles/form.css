@@ -196,20 +196,3 @@
 .form-drawer[data-mode='edit'] .form-control-btns--edit {
   display: flex;
 }
-
-.form-errors {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(2, min-content);
-  grid-auto-columns: max-content;
-  justify-content: start;
-  gap: 8px 30px;
-  width: 100%;
-}
-
-.form-errors .body-s.error-item {
-  color: var(--color-danger);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 15px;
-}
