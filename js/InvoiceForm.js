@@ -4,6 +4,7 @@ import DeleteModal from './components/DeleteModal.js'
 export default class InvoiceForm {
   constructor(invoiceService) {
     this.service = invoiceService
+    // init modal
     this.deleteModal = new DeleteModal()
 
     // elements
@@ -19,6 +20,7 @@ export default class InvoiceForm {
       invoiceDetailsContainer: document.querySelector('.invoice-details'),
       empty: document.querySelector('.empty'),
       totalInvoices: document.querySelector('#total-invoices'),
+      filterCheckboxes: document.querySelectorAll('.filter-checkbox'),
 
       // invoice details elements
       invoiceItemNames: document.querySelector('#invoice-item-names'),
@@ -55,6 +57,7 @@ export default class InvoiceForm {
     this.state = {
       showingForm: this.elements.formDrawer.classList.contains('is-visible'),
       mode: this.elements.formDrawer.dataset.mode,
+      activeFilters: [],
     }
 
     // init event listeners and render invoices
@@ -76,6 +79,7 @@ export default class InvoiceForm {
       markAsPaidBtn,
       saveChangesBtn,
       saveDraftBtn,
+      filterCheckboxes,
     } = this.elements
 
     // form toggles
@@ -102,6 +106,9 @@ export default class InvoiceForm {
     markAsPaidBtn.addEventListener('click', this.markAsPaid.bind(this))
     saveChangesBtn.addEventListener('click', (e) => this.editInvoice(e))
     saveDraftBtn.addEventListener('click', (e) => this.saveDraft(e))
+    filterCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', this.handleFilterChange.bind(this))
+    })
   }
 
   // form toggle
@@ -355,7 +362,16 @@ export default class InvoiceForm {
   }
 
   renderInvoices() {
-    this.elements.totalInvoices.textContent = this.service.getInvoices().length
+    const allInvoices = this.service.getInvoices()
+    const invoicesToRender = allInvoices.filter((invoice) => {
+      if (this.state.activeFilters.length === 0) return true
+      return this.state.activeFilters.includes(invoice.status)
+    })
+
+    if (this.elements.totalInvoices) {
+      this.elements.totalInvoices.textContent = invoicesToRender.length
+    }
+
     // hide or show empty state
     if (this.service.getInvoices().length === 0) {
       this.elements.empty.style.display = 'block'
@@ -367,8 +383,7 @@ export default class InvoiceForm {
     // clear list before rendering
     this.elements.invoiceList.innerHTML = ''
 
-    // render invoices
-    this.service.invoices.forEach((invoice) => {
+    invoicesToRender.forEach((invoice) => {
       const invoiceElement = document.createElement('div')
       invoiceElement.classList.add('invoice')
       invoiceElement.dataset.id = invoice.id
@@ -391,6 +406,8 @@ export default class InvoiceForm {
 
   markAsPaid() {
     const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
+    const invoice = this.service.getInvoiceById(invoiceId)
+    invoice.status = 'paid'
     this.service.updateStatus(invoiceId, 'paid')
     this.renderInvoices()
 
@@ -577,6 +594,14 @@ export default class InvoiceForm {
       year: 'numeric',
       timeZone: 'UTC',
     })
+  }
+
+  handleFilterChange() {
+    const checkedValues = [...this.elements.filterCheckboxes]
+      .filter((box) => box.checked)
+      .map((box) => box.value)
+    this.state.activeFilters = checkedValues
+    this.renderInvoices()
   }
 
   formatStatus(status) {
