@@ -47,7 +47,7 @@ export default class InvoiceService {
       paymentTerms: invoiceData.paymentTerms,
       clientName: invoiceData.clientName,
       clientEmail: invoiceData.clientEmail,
-      status: 'pending',
+      status: invoiceData.status || 'pending',
       senderAddress: {
         street: invoiceData.senderStreet,
         city: invoiceData.senderCity,
