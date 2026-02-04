@@ -24,10 +24,14 @@ export default class InvoiceForm {
 
       // invoice details elements
 
-      invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
+      invoiceDetailsAmountDue: document.querySelector(
+        '#invoice-details-amount-due',
+      ),
       statusBtn: document.querySelector('#invoice-details-status'),
       invoiceDetailsId: document.querySelector('#invoice-details-id'),
-      invoiceDetailsDescription: document.querySelector('#invoice-details-description'),
+      invoiceDetailsDescription: document.querySelector(
+        '#invoice-details-description',
+      ),
       fromAddress: document.querySelector('#invoice-details-from-address'),
       date: document.querySelector('#invoice-details-date'),
       paymentDue: document.querySelector('#invoice-details-payment-due'),
@@ -82,7 +86,9 @@ export default class InvoiceForm {
 
     // form toggles
     newInvoiceBtn.addEventListener('click', this.toggleForm.bind(this))
-    editInvoiceBtns.forEach((btn) => btn.addEventListener('click', this.toggleForm.bind(this)))
+    editInvoiceBtns.forEach((btn) =>
+      btn.addEventListener('click', this.toggleForm.bind(this)),
+    )
     discardBtn.addEventListener('click', this.toggleForm.bind(this))
     cancelBtn.addEventListener('click', this.toggleForm.bind(this))
     formOverlay.addEventListener('click', this.toggleForm.bind(this))
@@ -101,7 +107,9 @@ export default class InvoiceForm {
     })
 
     listItemsContainer.addEventListener('input', (e) => this.handleItemInput(e))
-    markAsPaidBtns.forEach((btn) => btn.addEventListener('click', this.markAsPaid.bind(this)))
+    markAsPaidBtns.forEach((btn) =>
+      btn.addEventListener('click', this.markAsPaid.bind(this)),
+    )
     saveChangesBtn.addEventListener('click', (e) => this.editInvoice(e))
     saveDraftBtn.addEventListener('click', (e) => this.saveDraft(e))
     filterCheckboxes.forEach((checkbox) => {
@@ -138,7 +146,8 @@ export default class InvoiceForm {
       this.clearErrors()
 
       // clear list items
-      const listItemRows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      const listItemRows =
+        this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       listItemRows.forEach((row) => row.remove())
 
       // if new invoice button
@@ -215,7 +224,9 @@ export default class InvoiceForm {
     this.renderInvoices()
 
     // rerender invoice details with hacky event handler
-    this.renderInvoiceDetails({ target: { closest: () => ({ dataset: { id: invoiceId } }) } })
+    this.renderInvoiceDetails({
+      target: { closest: () => ({ dataset: { id: invoiceId } }) },
+    })
     this.toggleForm()
   }
   saveDraft(e) {
@@ -317,6 +328,7 @@ export default class InvoiceForm {
       invoiceDetailsContainer,
       markAsPaidBtns,
       invoiceItemsList,
+      editInvoiceBtns,
     } = this.elements
 
     // get invoice id and invoice, set data id to invoice details container
@@ -329,11 +341,18 @@ export default class InvoiceForm {
       markAsPaidBtns.forEach((btn) => {
         btn.style.display = 'none'
       })
+      editInvoiceBtns.forEach((btn) => {
+        btn.style.display = 'none'
+      })
     } else {
       markAsPaidBtns.forEach((btn) => {
         btn.style.display = 'block'
       })
+      editInvoiceBtns.forEach((btn) => {
+        btn.style.display = 'block'
+      })
     }
+
     // update details status btn
     statusBtn.textContent = this.formatStatus(invoice.status)
     statusBtn.classList = `btn-status h-s ${invoice.status}`
@@ -368,7 +387,8 @@ export default class InvoiceForm {
     invoiceItemsList.innerHTML = ''
 
     // clear add item totals to prevent rerendering on new form toggle
-    const totalEls = this.elements.listItemsContainer.querySelectorAll('.item-total p')
+    const totalEls =
+      this.elements.listItemsContainer.querySelectorAll('.item-total p')
     totalEls.forEach((el) => {
       el.textContent = ''
     })
@@ -485,7 +505,8 @@ export default class InvoiceForm {
     })
 
     // get all list items in item list of form
-    const formListItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const formListItems =
+      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
 
     // if there are none, isvalid is false, push error
     if (formListItems.length === 0) {
@@ -604,18 +625,26 @@ export default class InvoiceForm {
 
     // get custom input fields
     // set date input value and visual display
-    const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
+    const dateInput = this.elements.form.querySelector(
+      'input[name="createdAt"]',
+    )
     dateInput.value = invoice.createdAt
 
-    const dateVisual = this.elements.form.querySelector('.date-trigger .selected-date')
+    const dateVisual = this.elements.form.querySelector(
+      '.date-trigger .selected-date',
+    )
     dateVisual.textContent = this.formatDate(invoice.createdAt)
 
     // set custom payment terms
 
-    const termsInput = this.elements.form.querySelector('input[name="paymentTerms"]')
+    const termsInput = this.elements.form.querySelector(
+      'input[name="paymentTerms"]',
+    )
     termsInput.value = invoice.paymentTerms
 
-    const termsVisual = this.elements.form.querySelector('.select-trigger .selected-value')
+    const termsVisual = this.elements.form.querySelector(
+      '.select-trigger .selected-value',
+    )
     termsVisual.textContent = `Next ${invoice.paymentTerms} Day${invoice.paymentTerms === 1 ? '' : 's'}`
 
     // for each form list item that exist in invoice
@@ -623,7 +652,8 @@ export default class InvoiceForm {
       // create a new blank row
       this.addListItem()
       // get the last row
-      const rows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      const rows =
+        this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       const lastRow = rows[rows.length - 1]
 
       // populate the last row with the correct input values
@@ -632,7 +662,9 @@ export default class InvoiceForm {
       lastRow.querySelector('input[name="item-price"]').value = item.price
 
       // trigger event to pass to handleItemInput to update total for the item
-      const fakeEvent = { target: lastRow.querySelector('input[name="item-qty"]') }
+      const fakeEvent = {
+        target: lastRow.querySelector('input[name="item-qty"]'),
+      }
       this.handleItemInput(fakeEvent)
     })
   }
@@ -641,7 +673,8 @@ export default class InvoiceForm {
     // get current form data
     const formData = new FormData(this.elements.form)
     // get the item list data
-    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const listItems =
+      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
     // map through each item to get the item data
     const listItemsData = [...listItems].map((item) => {
       return {
@@ -679,7 +712,10 @@ export default class InvoiceForm {
   }
 
   formatCurrency(amt) {
-    return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amt)
+    return Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amt)
   }
 
   handleItemInput(e) {
@@ -687,7 +723,8 @@ export default class InvoiceForm {
     const row = e.target.closest('.form-list-item')
     const totalEl = row.querySelector('.item-total p')
     const qty = Number(row.querySelector('input[name="item-qty"').value) || 0
-    const price = Number(row.querySelector('input[name="item-price"').value) || 0
+    const price =
+      Number(row.querySelector('input[name="item-price"').value) || 0
     const total = qty * price
     totalEl.textContent = this.formatCurrency(total)
   }
@@ -701,13 +738,18 @@ export default class InvoiceForm {
 
     // reset createdAt
     // reset date picker display
-    const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
+    const dateInput = this.elements.form.querySelector(
+      'input[name="createdAt"]',
+    )
     dateInput.value = today
-    this.elements.form.querySelector('.date-trigger .selected-date').textContent =
-      this.formatDate(today)
+    this.elements.form.querySelector(
+      '.date-trigger .selected-date',
+    ).textContent = this.formatDate(today)
 
     // reset payment terms
     this.elements.form.querySelector('select[name="paymentTerms"]').value = '30'
-    this.elements.form.querySelector('.select-trigger .selected-value').textContent = 'Next 30 days'
+    this.elements.form.querySelector(
+      '.select-trigger .selected-value',
+    ).textContent = 'Next 30 days'
   }
 }
