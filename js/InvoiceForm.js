@@ -24,14 +24,10 @@ export default class InvoiceForm {
 
       // invoice details elements
 
-      invoiceDetailsAmountDue: document.querySelector(
-        '#invoice-details-amount-due',
-      ),
+      invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
       statusBtn: document.querySelector('#invoice-details-status'),
       invoiceDetailsId: document.querySelector('#invoice-details-id'),
-      invoiceDetailsDescription: document.querySelector(
-        '#invoice-details-description',
-      ),
+      invoiceDetailsDescription: document.querySelector('#invoice-details-description'),
       fromAddress: document.querySelector('#invoice-details-from-address'),
       date: document.querySelector('#invoice-details-date'),
       paymentDue: document.querySelector('#invoice-details-payment-due'),
@@ -86,9 +82,7 @@ export default class InvoiceForm {
 
     // form toggles
     newInvoiceBtn.addEventListener('click', this.toggleForm.bind(this))
-    editInvoiceBtns.forEach((btn) =>
-      btn.addEventListener('click', this.toggleForm.bind(this)),
-    )
+    editInvoiceBtns.forEach((btn) => btn.addEventListener('click', this.toggleForm.bind(this)))
     discardBtn.addEventListener('click', this.toggleForm.bind(this))
     cancelBtn.addEventListener('click', this.toggleForm.bind(this))
     formOverlay.addEventListener('click', this.toggleForm.bind(this))
@@ -107,9 +101,7 @@ export default class InvoiceForm {
     })
 
     listItemsContainer.addEventListener('input', (e) => this.handleItemInput(e))
-    markAsPaidBtns.forEach((btn) =>
-      btn.addEventListener('click', this.markAsPaid.bind(this)),
-    )
+    markAsPaidBtns.forEach((btn) => btn.addEventListener('click', this.markAsPaid.bind(this)))
     saveChangesBtn.addEventListener('click', (e) => this.editInvoice(e))
     saveDraftBtn.addEventListener('click', (e) => this.saveDraft(e))
     filterCheckboxes.forEach((checkbox) => {
@@ -146,8 +138,7 @@ export default class InvoiceForm {
       this.clearErrors()
 
       // clear list items
-      const listItemRows =
-        this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      const listItemRows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       listItemRows.forEach((row) => row.remove())
 
       // if new invoice button
@@ -278,12 +269,12 @@ export default class InvoiceForm {
 
     <div class="field-group qty-field">
       <label class="body-s mobile-label">Qty.</label>
-      <input type="number" name="item-qty" />
+      <input type="text" name="item-qty" />
     </div>
 
     <div class="field-group price-field">
       <label class="body-s mobile-label">Price</label>
-      <input type="number" name="item-price" />
+      <input type="text" name="item-price" />
     </div>
 
     <div class="field-group total-field">
@@ -341,13 +332,18 @@ export default class InvoiceForm {
       markAsPaidBtns.forEach((btn) => {
         btn.style.display = 'none'
       })
-      editInvoiceBtns.forEach((btn) => {
-        btn.style.display = 'none'
-      })
     } else {
       markAsPaidBtns.forEach((btn) => {
         btn.style.display = 'block'
       })
+    }
+
+    // disable edit for paid invoices
+    if (invoice.status === 'paid') {
+      editInvoiceBtns.forEach((btn) => {
+        btn.style.display = 'none'
+      })
+    } else {
       editInvoiceBtns.forEach((btn) => {
         btn.style.display = 'block'
       })
@@ -387,8 +383,7 @@ export default class InvoiceForm {
     invoiceItemsList.innerHTML = ''
 
     // clear add item totals to prevent rerendering on new form toggle
-    const totalEls =
-      this.elements.listItemsContainer.querySelectorAll('.item-total p')
+    const totalEls = this.elements.listItemsContainer.querySelectorAll('.item-total p')
     totalEls.forEach((el) => {
       el.textContent = ''
     })
@@ -497,16 +492,22 @@ export default class InvoiceForm {
     // check if input is empty
     visibleInputs.forEach((input) => {
       if (!input.value.trim()) {
-        // not valid, show error, push error to array
         isValid = false
         this.showInlineError(input)
-        errors.push(this.getFieldName(input))
+        errors.push(`${this.getFieldName(input)} can't be empty`)
+      }
+      if (input.name.toLowerCase().includes('zip') && input.value.trim()) {
+        if (!this.validateNumber(input.value)) {
+          // not valid, show error, push error to array
+          isValid = false
+          this.showInlineError(input, 'number')
+          errors.push(`${this.getFieldName(input)} must be a number`)
+        }
       }
     })
 
     // get all list items in item list of form
-    const formListItems =
-      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const formListItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
 
     // if there are none, isvalid is false, push error
     if (formListItems.length === 0) {
@@ -530,6 +531,20 @@ export default class InvoiceForm {
         if (!nameInput.value || !qtyInput.value || !priceInput.value) {
           if (!errors.includes('All item fields must be filled')) {
             errors.push('All item fields must be filled')
+          }
+        }
+        if (qtyInput.value.trim() && !this.validateNumber(qtyInput.value)) {
+          isValid = false
+          qtyInput.classList.add('error-border')
+          if (!errors.includes('Item quantity must be a number')) {
+            errors.push('Item quantity must be a number')
+          }
+        }
+        if (priceInput.value.trim() && !this.validateNumber(priceInput.value)) {
+          isValid = false
+          priceInput.classList.add('error-border')
+          if (!errors.includes('Item price must be a number')) {
+            errors.push('Item price must be a number')
           }
         }
       })
@@ -556,46 +571,81 @@ export default class InvoiceForm {
     const errorContainer = this.elements.form.querySelector('.form-errors')
     errorContainer.innerHTML = ''
   }
-  showInlineError(input) {
-    // add red border to empty input
+  showInlineError(input, type = 'empty') {
     input.classList.add('error-border')
 
-    // grab closest label and render error span to display error msg above input
-    const label = input.closest('label')
-    if (label) {
-      const errorSpan = document.createElement('span')
-      errorSpan.classList.add('field-error-msg')
-      errorSpan.textContent = `Can't be empty`
-      label.appendChild(errorSpan)
+    const msg = type === 'number' ? 'Invalid number' : "Can't be empty"
+
+    // search for the Label first
+    // We look for a label wrapping the input OR a label in the immediate parent
+    let target = input.closest('label') || input.parentElement.querySelector('label')
+
+    if (target && target.classList.contains('mobile-label')) {
+      target = null
+    }
+
+    if (!target) {
+      target = input.parentElement
+    }
+
+    // Render the Error
+    if (target) {
+      // Prevent duplicates
+      if (!target.querySelector('.field-error-msg')) {
+        const errorSpan = document.createElement('span')
+        errorSpan.classList.add('field-error-msg')
+        errorSpan.textContent = msg
+
+        target.appendChild(errorSpan)
+        target.style.position = 'relative'
+      }
     }
   }
 
   getFieldName(input) {
-    // get label text and trim
-    const label = input.closest('label')
-    if (label && label.childNodes[0]) {
-      return label.childNodes[0].textContent.trim()
+    // find the label (Standard logic)
+    let label = input.closest('label')
+
+    // if not found, check the parent group (Grid layout fallback)
+    if (!label) {
+      const group = input.closest('.field-group, .form-group')
+      if (group) {
+        label = group.querySelector('label')
+      }
     }
+
+    if (label) {
+      // clone it so we don't actually delete the error message from the screen
+      const clone = label.cloneNode(true)
+      const errorSpan = clone.querySelector('.field-error-msg')
+
+      if (errorSpan) {
+        errorSpan.remove()
+      }
+
+      return clone.textContent.trim()
+    }
+
     return input.name
   }
+
   renderBottomErrors(errors) {
     const errorContainer = this.elements.form.querySelector('.form-errors')
+    errorContainer.innerHTML = ''
 
-    // add container for error title and list
-    const errorTittle = document.createElement('p')
-    errorTittle.classList.add('error-title', 'body-s')
-    errorTittle.textContent = '- All fields must be added'
-    errorContainer.appendChild(errorTittle)
+    // Title
+    const errorTitle = document.createElement('p')
+    errorTitle.classList.add('error-title', 'body-s')
+    errorTitle.textContent = '- All fields must be added'
+    errorContainer.appendChild(errorTitle)
 
-    // add individual errors
+    // List
     errors.forEach((err) => {
       const errorEl = document.createElement('p')
       errorEl.classList.add('error-list-item', 'body-s')
-      if (err.includes('must be') || err.includes('must add')) {
-        errorEl.textContent = `-${err}`
-      } else {
-        errorEl.textContent = `-${err} can't be empty`
-      }
+
+      errorEl.textContent = `-${err}`
+
       errorContainer.appendChild(errorEl)
     })
   }
@@ -625,26 +675,18 @@ export default class InvoiceForm {
 
     // get custom input fields
     // set date input value and visual display
-    const dateInput = this.elements.form.querySelector(
-      'input[name="createdAt"]',
-    )
+    const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
     dateInput.value = invoice.createdAt
 
-    const dateVisual = this.elements.form.querySelector(
-      '.date-trigger .selected-date',
-    )
+    const dateVisual = this.elements.form.querySelector('.date-trigger .selected-date')
     dateVisual.textContent = this.formatDate(invoice.createdAt)
 
     // set custom payment terms
 
-    const termsInput = this.elements.form.querySelector(
-      'input[name="paymentTerms"]',
-    )
+    const termsInput = this.elements.form.querySelector('input[name="paymentTerms"]')
     termsInput.value = invoice.paymentTerms
 
-    const termsVisual = this.elements.form.querySelector(
-      '.select-trigger .selected-value',
-    )
+    const termsVisual = this.elements.form.querySelector('.select-trigger .selected-value')
     termsVisual.textContent = `Next ${invoice.paymentTerms} Day${invoice.paymentTerms === 1 ? '' : 's'}`
 
     // for each form list item that exist in invoice
@@ -652,8 +694,7 @@ export default class InvoiceForm {
       // create a new blank row
       this.addListItem()
       // get the last row
-      const rows =
-        this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+      const rows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       const lastRow = rows[rows.length - 1]
 
       // populate the last row with the correct input values
@@ -673,8 +714,7 @@ export default class InvoiceForm {
     // get current form data
     const formData = new FormData(this.elements.form)
     // get the item list data
-    const listItems =
-      this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
     // map through each item to get the item data
     const listItemsData = [...listItems].map((item) => {
       return {
@@ -723,8 +763,7 @@ export default class InvoiceForm {
     const row = e.target.closest('.form-list-item')
     const totalEl = row.querySelector('.item-total p')
     const qty = Number(row.querySelector('input[name="item-qty"').value) || 0
-    const price =
-      Number(row.querySelector('input[name="item-price"').value) || 0
+    const price = Number(row.querySelector('input[name="item-price"').value) || 0
     const total = qty * price
     totalEl.textContent = this.formatCurrency(total)
   }
@@ -738,18 +777,16 @@ export default class InvoiceForm {
 
     // reset createdAt
     // reset date picker display
-    const dateInput = this.elements.form.querySelector(
-      'input[name="createdAt"]',
-    )
+    const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
     dateInput.value = today
-    this.elements.form.querySelector(
-      '.date-trigger .selected-date',
-    ).textContent = this.formatDate(today)
+    this.elements.form.querySelector('.date-trigger .selected-date').textContent =
+      this.formatDate(today)
 
     // reset payment terms
     this.elements.form.querySelector('select[name="paymentTerms"]').value = '30'
-    this.elements.form.querySelector(
-      '.select-trigger .selected-value',
-    ).textContent = 'Next 30 days'
+    this.elements.form.querySelector('.select-trigger .selected-value').textContent = 'Next 30 days'
+  }
+  validateNumber(value) {
+    return /^\d+(\.\d{1,2})?$/.test(value) && Number(value) >= 0
   }
 }
