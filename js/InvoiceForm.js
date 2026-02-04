@@ -369,7 +369,7 @@ export default class InvoiceForm {
     })
 
     if (this.elements.totalInvoices) {
-      this.elements.totalInvoices.textContent = invoicesToRender.length
+      this.elements.totalInvoices.textContent = `There ${invoicesToRender.length !== 1 ? 'are' : 'is'} ${invoicesToRender.length} total invoice${invoicesToRender.length !== 1 ? 's' : ''}.`
     }
 
     // hide or show empty state

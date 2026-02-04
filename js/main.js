@@ -24,6 +24,7 @@ if (filterDropdownEl) {
 if (selectDropdownEl) {
   new SelectDropdown(selectDropdownEl)
 }
+
 const toggleBtn = document.querySelector('.mode-toggle')
 
 function toggleMode(e) {
