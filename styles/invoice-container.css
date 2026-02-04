@@ -157,7 +157,7 @@
 .invoice-container .empty {
   text-align: center;
   margin: 75px auto 0;
-  display: block;
+  display: none;
 }
 
 .invoice-container .empty-img {
@@ -171,4 +171,70 @@
 .invoice-container .empty p {
   max-width: 28ch;
   line-height: 24px;
+}
+
+@media screen and (max-width: 900px) {
+  /* invoices */
+  .invoice-container {
+    padding-left: 0;
+
+    max-width: 768px;
+    padding: 20px;
+  }
+
+  .invoice-container .invoices .invoice-left {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  .invoice-container .details-info-top .bill-from {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .invoice-container .details-info-top .sent-to-mobile {
+    display: block;
+  }
+  .invoice-container .details-info-top .sent-to {
+    display: none;
+  }
+}
+
+@media (max-width: 666px) {
+  .invoice-container .invoice .invoice-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+  }
+  .invoice-container .invoice .invoice-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .invoice-container .invoice img {
+    display: none;
+  }
+
+  .invoice-container .invoice-right .btn-status {
+    padding-block: 10px;
+  }
+}
+
+@media (max-width: 585px) {
+  .invoice-container #filter {
+    width: 86px;
+  }
+  .invoice-container .invoice-header {
+    display: block;
+  }
+
+  .invoice-container .invoice-header .invoice-header-right {
+    gap: 24px;
+  }
+
+  .invoice-container .invoice-details-buttons--mobile {
+    display: flex;
+  }
 }

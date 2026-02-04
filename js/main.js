@@ -45,7 +45,7 @@ async function fetchInvoices() {
 // toggle light dark mode
 const toggleBtn = document.querySelector('.mode-toggle')
 
-function toggleMode(e) {
+function toggleMode(e, btn) {
   document.body.classList.toggle('dark-mode')
   const isDarkMode = document.body.classList.contains('dark-mode')
   toggleBtn.querySelector('img').src = isDarkMode

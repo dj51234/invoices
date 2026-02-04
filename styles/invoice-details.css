@@ -87,33 +87,106 @@
 
 /* Pricing Table Area */
 .invoice-details-content .details-pricing {
-  display: flex;
-  justify-content: space-around;
   margin-top: 48px;
   background: var(--color-bg-light);
-  padding: 24px;
+  padding: 32px;
   border-radius: 10px 10px 0 0;
-  gap: 85px;
 }
 
 .dark-mode .invoice-details-content .details-pricing {
   background: var(--color-dark-blue-light);
 }
 
-/* Shared styles for pricing columns */
-.invoice-details-content .details-pricing .names,
-.invoice-details-content .details-pricing .quantity,
-.invoice-details-content .details-pricing .price,
-.invoice-details-content .details-pricing .total {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 3px;
+/* --- Mobile Layout (< 512px) --- */
+
+/* Hide Headers on Mobile */
+.pricing-headers {
+  display: none;
 }
 
-/* Targets the first column (names) to fill space */
-.invoice-details-content .details-pricing div:nth-child(1) {
-  flex-grow: 1;
+/* Row Layout */
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.item-row:last-child {
+  margin-bottom: 0;
+}
+
+/* Specific Style Overrides */
+/* Note: JS uses .body-s, but Name needs to be Black/Bold, not Gray */
+.item-name-group .name {
+  color: var(--color-black);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.dark-mode .item-name-group .name {
+  color: white;
+}
+
+/* Mobile Helper Text (Qty x Price) */
+.mobile-qty-price {
+  /* Inherits .body-s color (gray-blue), just adding weight */
+  font-weight: 700;
+}
+
+/* Hide desktop columns */
+.desktop-qty,
+.desktop-price {
+  display: none;
+}
+
+/* --- Desktop Layout (> 512px) --- */
+@media (min-width: 512px) {
+  /* Show Headers */
+  .pricing-headers {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    margin-bottom: 32px;
+  }
+
+  /* Headers are standard text, but we ensure alignment */
+  .pricing-headers span {
+    color: var(--color-gray-blue);
+    font-weight: 500;
+  }
+
+  .dark-mode .pricing-headers span {
+    color: var(--color-gray);
+  }
+
+  /* Grid Row */
+  .item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  /* Hide mobile helper */
+  .mobile-qty-price {
+    display: none;
+  }
+
+  /* Show desktop columns */
+  .desktop-qty,
+  .desktop-price {
+    display: block;
+    /* Inherits .body-s styles automatically */
+  }
+
+  /* Alignment Helpers */
+  .pricing-headers .text-center,
+  .desktop-qty {
+    text-align: center;
+  }
+  .pricing-headers .text-right,
+  .desktop-price {
+    text-align: right;
+  }
 }
 
 /* Footer / Grand Total */
@@ -134,4 +207,44 @@
 
 .invoice-details-content .amount-due .body-m {
   color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .invoice-details-content .details-pricing {
+    gap: 36px;
+  }
+  .invoice-details-content .bill-from #invoice-details-from-address {
+    text-align: left;
+  }
+}
+
+@media (max-width: 585px) {
+  .invoice-details-content {
+    border-radius: 0;
+    padding: 15px;
+  }
+
+  .invoice-details-header .invoice-details-buttons {
+    display: none;
+  }
+
+  .invoice-details-header .invoice-details--status {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 515px) {
+  .invoice-details-content .details-pricing .item-title,
+  .invoice-details-content .details-pricing .item-quantity,
+  .invoice-details-content .details-pricing .item-price {
+    display: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .invoice-details-content .bill-to {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

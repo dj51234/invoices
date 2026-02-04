@@ -104,7 +104,7 @@ body.dark-mode {
   background: var(--color-primary);
   color: white;
 
-  span {
+  .plus-sign {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -132,6 +132,7 @@ body.dark-mode {
 .btn-1-alt {
   padding: 8px 18px 8px 8px;
 }
+
 .btn-2 {
   background: var(--color-primary);
   color: white;
@@ -384,4 +385,19 @@ input:focus {
   flex-wrap: wrap;
   gap: 10px;
   color: var(--color-danger);
+}
+
+.desktop-only {
+  display: inline-block;
+}
+
+@media (max-width: 415px) {
+  .desktop-only {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .btn:not(.new-invoice) {
+    padding: 10px 20px;
+  }
 }

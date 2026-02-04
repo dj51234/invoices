@@ -200,3 +200,190 @@
 .form-drawer[data-mode='edit'] .form-control-btns--edit {
   display: flex;
 }
+
+/* --- ITEM LIST GRID SYSTEM --- */
+
+/* Container */
+#form-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* 1. Main Header (Force Hide on Mobile) */
+/* Strong selector to override any existing flex rules */
+#form-list-items .item-list-header {
+  display: none !important;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 2. Individual Row Item */
+.form-list-item {
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr 15px;
+  gap: 24px 16px;
+  align-items: center;
+  width: 100%;
+}
+
+/* 3. Mobile Positioning */
+.name-field {
+  grid-column: 1 / -1;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.delete-field {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 25px;
+}
+
+.delete-item {
+  cursor: pointer;
+  color: var(--color-gray);
+  font-size: 16px;
+  transition: color 0.2s;
+}
+.delete-item:hover {
+  color: var(--color-danger);
+}
+
+.item-total p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* --- DESKTOP VIEW (> 585px) --- */
+@media (min-width: 585px) {
+  /* 1. Show Main Header */
+  /* We match the strong selector to turn it back on */
+  #form-list-items .item-list-header {
+    display: grid !important;
+    grid-template-columns: 2.5fr 0.5fr 1fr 1fr 20px;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: center;
+    height: auto; /* Restore height */
+    overflow: visible;
+  }
+
+  /* 2. Hide Mobile Labels */
+  .mobile-label {
+    display: none;
+  }
+
+  /* 3. Desktop Row Layout */
+  .form-list-item {
+    grid-template-columns: 2.5fr 0.5fr 1fr 1fr 20px;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .name-field {
+    grid-column: auto;
+  }
+
+  .field-group {
+    gap: 0;
+  }
+
+  .delete-field {
+    justify-content: center;
+    padding-top: 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* form */
+  .form-drawer {
+    left: 0;
+    width: 616px;
+    top: 80px;
+  }
+
+  .form-drawer .form-wrapper {
+    padding: 56px 56px 180px 56px;
+  }
+
+  .form-drawer .form-controls {
+    bottom: 80px;
+    width: calc(616px - 20px);
+  }
+}
+
+@media (max-width: 612px) {
+  .form-drawer {
+    left: 0;
+    width: 100%;
+  }
+
+  .form-drawer .form-controls {
+    width: 100%;
+    padding: 0;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 585px) {
+  .form-drawer #invoice-form .form-row--item-list label:first-child {
+    flex-basis: 100%;
+  }
+
+  .form-drawer #invoice-form .form-row--item-list {
+    flex-wrap: wrap;
+  }
+
+  .form-drawer #invoice-form .form-row--item-list label:nth-child(2),
+  .form-drawer #invoice-form .form-row--item-list label:nth-child(3) {
+    flex-basis: 30%;
+  }
+
+  .form-drawer .item-total {
+    flex-basis: 20%;
+  }
+  .form-drawer #invoice-form .form-row--item-list i {
+    top: 75%;
+  }
+
+  .form-drawer #invoice-form .form-row--from-address,
+  .form-drawer #invoice-form .form-row--to-address {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0px;
+  }
+
+  .form-drawer #invoice-form .form-row--to-address label:last-child,
+  .form-drawer #invoice-form .form-row--from-address label:last-child {
+    flex-basis: 100%;
+  }
+
+  .form-drawer #invoice-form .form-row--to-address label:first-child,
+  .form-drawer #invoice-form .form-row--to-address label:nth-child(2),
+  .form-drawer #invoice-form .form-row--from-address label:first-child,
+  .form-drawer #invoice-form .form-row--from-address label:nth-child(2) {
+    flex-basis: 48%;
+  }
+
+  .form-drawer #invoice-form .form-row--dual {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 479px) {
+  .form-drawer .form-wrapper {
+    padding: 20px 20px 100px 20px;
+  }
+}

@@ -23,10 +23,7 @@ export default class InvoiceForm {
       filterCheckboxes: document.querySelectorAll('.filter-checkbox'),
 
       // invoice details elements
-      invoiceItemNames: document.querySelector('#invoice-item-names'),
-      invoiceItemQuantities: document.querySelector('#invoice-item-quantities'),
-      invoiceItemPrices: document.querySelector('#invoice-item-prices'),
-      invoiceItemTotals: document.querySelector('#invoice-item-totals'),
+
       invoiceDetailsAmountDue: document.querySelector('#invoice-details-amount-due'),
       statusBtn: document.querySelector('#invoice-details-status'),
       invoiceDetailsId: document.querySelector('#invoice-details-id'),
@@ -37,6 +34,7 @@ export default class InvoiceForm {
       clientName: document.querySelector('#invoice-details-client-name'),
       clientAddress: document.querySelector('#invoice-details-client-address'),
       clientEmails: document.querySelectorAll('.invoice-details-client-email'),
+      invoiceItemsList: document.querySelector('#invoice-items-list'),
 
       // buttons
       addItemBtn: document.querySelector('.add-item'),
@@ -259,15 +257,34 @@ export default class InvoiceForm {
 
     // create list item element and add to form
     const listItemEl = document.createElement('div')
-    listItemEl.classList.add('form-list-item', 'form-row', 'form-row--item-list')
+    listItemEl.classList.add('form-list-item')
+
     listItemEl.innerHTML = `
-    <input type="text" name="item-name"/>
-    <input type="number" name="item-qty"/>
-    <input type="number" name="item-price"/>
-    <div class="item-total">
-      <p class="h-s">$0.00</p>
+    <div class="field-group name-field">
+      <label class="body-s mobile-label">Item Name</label>
+      <input type="text" name="item-name" />
     </div>
-    <i class="delete-item fa-sharp fa-solid fa-trash-can"></i>
+
+    <div class="field-group qty-field">
+      <label class="body-s mobile-label">Qty.</label>
+      <input type="number" name="item-qty" />
+    </div>
+
+    <div class="field-group price-field">
+      <label class="body-s mobile-label">Price</label>
+      <input type="number" name="item-price" />
+    </div>
+
+    <div class="field-group total-field">
+      <label class="body-s mobile-label">Total</label>
+      <div class="item-total">
+        <p class="h-s">$0.00</p>
+      </div>
+    </div>
+
+    <div class="field-group delete-field">
+       <i class="delete-item fa-sharp fa-solid fa-trash-can"></i>
+    </div>
     `
     this.elements.listItemsContainer.appendChild(listItemEl)
   }
@@ -296,13 +313,10 @@ export default class InvoiceForm {
       clientName,
       clientAddress,
       clientEmails,
-      invoiceItemNames,
-      invoiceItemQuantities,
-      invoiceItemPrices,
-      invoiceItemTotals,
       invoiceDetailsAmountDue,
       invoiceDetailsContainer,
       markAsPaidBtns,
+      invoiceItemsList,
     } = this.elements
 
     // get invoice id and invoice, set data id to invoice details container
@@ -311,17 +325,13 @@ export default class InvoiceForm {
     invoiceDetailsContainer.dataset.id = invoiceId
 
     // disable mark as paid for draft invoices
-    if (invoice.status === 'draft') {
+    if (invoice.status === 'draft' || invoice.status === 'paid') {
       markAsPaidBtns.forEach((btn) => {
-        btn.disabled = true
-        btn.style.opacity = '0.5'
-        btn.style.cursor = 'not-allowed'
+        btn.style.display = 'none'
       })
     } else {
       markAsPaidBtns.forEach((btn) => {
-        btn.disabled = false
-        btn.style.opacity = '1'
-        btn.style.cursor = 'pointer'
+        btn.style.display = 'block'
       })
     }
     // update details status btn
@@ -335,7 +345,7 @@ export default class InvoiceForm {
     invoiceDetailsDescription.textContent = invoice.description
 
     // update invoice details from address
-    fromAddress.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}, ${invoice.senderAddress.state}<br>${invoice.senderAddress.zipCode}`
+    fromAddress.innerHTML = `${invoice.senderAddress.street}<br>${invoice.senderAddress.city}${invoice.senderAddress.city ? ', ' : ''}${invoice.senderAddress.state}<br>${invoice.senderAddress.zipCode}`
 
     // update invoice details date
     date.textContent = this.formatDate(invoice.createdAt)
@@ -355,10 +365,7 @@ export default class InvoiceForm {
     })
 
     // clear invoice items
-    invoiceItemNames.innerHTML = ''
-    invoiceItemQuantities.innerHTML = ''
-    invoiceItemPrices.innerHTML = ''
-    invoiceItemTotals.innerHTML = ''
+    invoiceItemsList.innerHTML = ''
 
     // clear add item totals to prevent rerendering on new form toggle
     const totalEls = this.elements.listItemsContainer.querySelectorAll('.item-total p')
@@ -368,25 +375,23 @@ export default class InvoiceForm {
 
     // for each item in the invoice, render to details table
     invoice.items.forEach((item) => {
-      const nameEl = document.createElement('p')
-      nameEl.classList.add('h-s')
-      nameEl.textContent = item.name
-      invoiceItemNames.appendChild(nameEl)
+      const row = document.createElement('div')
+      row.classList.add('item-row')
+      row.innerHTML = `
+        <div class="item-name-group">
+          <p class="h-s name">${item.name}</p>
+          <p class="body-m mobile-qty-price">
+            ${item.quantity} x ${this.formatCurrency(item.price)}
+          </p>
+        </div>
+        
+        <p class="h-s desktop-qty">${item.quantity}</p>
+        <p class="h-s desktop-price">${this.formatCurrency(item.price)}</p>
+        
+        <p class="h-s item-total">${this.formatCurrency(item.total)}</p>
+      `
 
-      const qtyEl = document.createElement('p')
-      qtyEl.classList.add('h-s')
-      qtyEl.textContent = item.quantity
-      invoiceItemQuantities.appendChild(qtyEl)
-
-      const priceEl = document.createElement('p')
-      priceEl.classList.add('h-s')
-      priceEl.textContent = this.formatCurrency(item.price)
-      invoiceItemPrices.appendChild(priceEl)
-
-      const totalEl = document.createElement('p')
-      totalEl.classList.add('h-s')
-      totalEl.textContent = this.formatCurrency(item.total)
-      invoiceItemTotals.appendChild(totalEl)
+      invoiceItemsList.appendChild(row)
     })
 
     // update invoice details amount due
@@ -449,7 +454,7 @@ export default class InvoiceForm {
     invoice.status = 'paid'
     this.service.updateStatus(invoiceId, 'paid')
     this.renderInvoices()
-
+    document.dispatchEvent(new CustomEvent('invoice-paid'))
     // update status btn UI
     this.elements.statusBtn.textContent = 'Paid'
     this.elements.statusBtn.classList = 'btn-status h-s paid'
@@ -611,10 +616,7 @@ export default class InvoiceForm {
     termsInput.value = invoice.paymentTerms
 
     const termsVisual = this.elements.form.querySelector('.select-trigger .selected-value')
-    termsVisual.textContent = `Next ${invoice.paymentTerms} days`
-
-    // if 1 day, change to "Next 1 day"
-    if (invoice.paymentTerms === '1') termsVisual.textContent = 'Next 1 day'
+    termsVisual.textContent = `Next ${invoice.paymentTerms} Day${invoice.paymentTerms === 1 ? '' : 's'}`
 
     // for each form list item that exist in invoice
     invoice.items.forEach((item) => {

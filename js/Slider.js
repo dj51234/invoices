@@ -27,6 +27,11 @@ export default class Slider {
         this.toggleSlider()
       }
     })
+    document.addEventListener('invoice-paid', () => {
+      if (this.state.showingDetails) {
+        this.toggleSlider()
+      }
+    })
   }
 
   async toggleSlider() {

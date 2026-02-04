@@ -112,10 +112,10 @@
                       </div>
 
                       <div class="select-options">
-                        <div class="option" data-value="1">Net 1 Day</div>
-                        <div class="option" data-value="7">Net 7 Days</div>
-                        <div class="option" data-value="14">Net 14 Days</div>
-                        <div class="option selected" data-value="30">Net 30 Days</div>
+                        <div class="option" data-value="1">Next 1 Day</div>
+                        <div class="option" data-value="7">Next 7 Days</div>
+                        <div class="option" data-value="14">Next 14 Days</div>
+                        <div class="option selected" data-value="30">Next 30 Days</div>
                       </div>
                     </div></label
                   >
@@ -209,7 +209,10 @@
                   </div>
                 </div>
                 <button class="btn btn-1 btn-1-alt new-invoice">
-                  <span><i>+</i></span> New Invoice
+                  <span class="plus-sign"><i>+</i></span>
+                  <span class="new-invoice-text"
+                    >New <span class="desktop-only">Invoice</span></span
+                  >
                 </button>
               </div>
             </div>
@@ -291,23 +294,16 @@
                   </div>
                   <div class="details-info-bottom"></div>
                 </div>
+
                 <div class="details-pricing">
-                  <div class="item-names">
-                    <p class="body-m">Item Name</p>
-                    <div id="invoice-item-names" class="names"></div>
+                  <div class="pricing-headers body-m">
+                    <span class="text-left">Item Name</span>
+                    <span class="text-center">QTY.</span>
+                    <span class="text-right">Price</span>
+                    <span class="text-right">Total</span>
                   </div>
-                  <div class="item-quantity">
-                    <p class="body-m">QTY.</p>
-                    <div id="invoice-item-quantities" class="quantity"></div>
-                  </div>
-                  <div class="item-price">
-                    <p class="body-m">Price</p>
-                    <div id="invoice-item-prices" class="price"></div>
-                  </div>
-                  <div class="item-total">
-                    <p class="body-m">Total</p>
-                    <div id="invoice-item-totals" class="total"></div>
-                  </div>
+
+                  <div id="invoice-items-list"></div>
                 </div>
                 <div class="amount-due">
                   <p class="body-m">Amount Due</p>
