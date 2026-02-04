@@ -13,7 +13,6 @@
   overflow: hidden;
   transition: transform 0.3s ease-in-out;
   transform: translateX(-100%);
-  border-radius: 0 16px 16px 0;
 }
 .dark-mode .form-drawer {
   background: var(--color-bg-dark);

@@ -93,6 +93,10 @@
   border-radius: 10px 10px 0 0;
 }
 
+.invoice-details-content .details-pricing .item-total {
+  text-align: right;
+}
+
 .dark-mode .invoice-details-content .details-pricing {
   background: var(--color-dark-blue-light);
 }
