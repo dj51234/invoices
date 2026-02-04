@@ -48,7 +48,7 @@ export default class InvoiceForm {
       editInvoiceBtns: document.querySelectorAll('.edit-invoice'),
       deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
       deleteInvoiceBtns: document.querySelectorAll('.delete-invoice'),
-      markAsPaidBtn: document.querySelector('.mark-paid'),
+      markAsPaidBtns: document.querySelectorAll('.mark-paid'),
       saveChangesBtn: document.querySelector('.save-btn'),
       saveDraftBtn: document.querySelector('.save-draft-btn'),
     }
@@ -76,7 +76,7 @@ export default class InvoiceForm {
       listItemsContainer,
       invoiceList,
       deleteInvoiceBtns,
-      markAsPaidBtn,
+      markAsPaidBtns,
       saveChangesBtn,
       saveDraftBtn,
       filterCheckboxes,
@@ -103,7 +103,7 @@ export default class InvoiceForm {
     })
 
     listItemsContainer.addEventListener('input', (e) => this.handleItemInput(e))
-    markAsPaidBtn.addEventListener('click', this.markAsPaid.bind(this))
+    markAsPaidBtns.forEach((btn) => btn.addEventListener('click', this.markAsPaid.bind(this)))
     saveChangesBtn.addEventListener('click', (e) => this.editInvoice(e))
     saveDraftBtn.addEventListener('click', (e) => this.saveDraft(e))
     filterCheckboxes.forEach((checkbox) => {
@@ -139,6 +139,7 @@ export default class InvoiceForm {
       this.elements.form.reset()
       this.clearErrors()
 
+      // clear list items
       const listItemRows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       listItemRows.forEach((row) => row.remove())
 
@@ -184,9 +185,11 @@ export default class InvoiceForm {
   addInvoice(e) {
     e.preventDefault()
     if (!this.validateForm()) return
+
     // get form data
     const invoiceData = this.getFormData()
     invoiceData.status = 'pending'
+
     // add invoice to service and rerender
     this.service.addInvoice(invoiceData)
     this.renderInvoices()
@@ -197,24 +200,34 @@ export default class InvoiceForm {
     e.preventDefault()
     if (!this.validateForm()) return
 
+    // get invoice id and current invoice data
     const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
     const currentInvoice = this.service.getInvoiceById(invoiceId)
+
+    // get updated form data
     const updatedData = this.getFormData()
 
+    // if current invoice is draft, update status to pending
     if (currentInvoice.status === 'draft') {
       updatedData.status = 'pending'
     }
+
+    // update invoice in service and rerender
     this.service.updateInvoice(invoiceId, updatedData)
     this.renderInvoices()
+
+    // rerender invoice details with hacky event handler
     this.renderInvoiceDetails({ target: { closest: () => ({ dataset: { id: invoiceId } }) } })
     this.toggleForm()
   }
   saveDraft(e) {
     e.preventDefault()
 
+    // get form data
     const invoiceData = this.getFormData()
     invoiceData.status = 'draft'
 
+    // set created at if not set
     if (!invoiceData.createdAt) {
       invoiceData.createdAt = Intl.DateTimeFormat('en-US', {
         day: '2-digit',
@@ -223,13 +236,16 @@ export default class InvoiceForm {
       }).format(new Date())
     }
 
+    // update draft to pending invoice
     this.service.addInvoice(invoiceData)
     this.renderInvoices()
     this.toggleForm()
   }
   promptDelete() {
+    // grab invoice id from details container
     const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
 
+    // open modal and trigger new event for Modal listener with callback to delete invoice and send event
     this.deleteModal.open(invoiceId, () => {
       this.service.deleteInvoice(invoiceId)
       this.renderInvoices()
@@ -286,6 +302,7 @@ export default class InvoiceForm {
       invoiceItemTotals,
       invoiceDetailsAmountDue,
       invoiceDetailsContainer,
+      markAsPaidBtns,
     } = this.elements
 
     // get invoice id and invoice, set data id to invoice details container
@@ -293,6 +310,20 @@ export default class InvoiceForm {
     const invoice = this.service.getInvoiceById(invoiceId)
     invoiceDetailsContainer.dataset.id = invoiceId
 
+    // disable mark as paid for draft invoices
+    if (invoice.status === 'draft') {
+      markAsPaidBtns.forEach((btn) => {
+        btn.disabled = true
+        btn.style.opacity = '0.5'
+        btn.style.cursor = 'not-allowed'
+      })
+    } else {
+      markAsPaidBtns.forEach((btn) => {
+        btn.disabled = false
+        btn.style.opacity = '1'
+        btn.style.cursor = 'pointer'
+      })
+    }
     // update details status btn
     statusBtn.textContent = this.formatStatus(invoice.status)
     statusBtn.classList = `btn-status h-s ${invoice.status}`
@@ -334,6 +365,7 @@ export default class InvoiceForm {
     totalEls.forEach((el) => {
       el.textContent = ''
     })
+
     // for each item in the invoice, render to details table
     invoice.items.forEach((item) => {
       const nameEl = document.createElement('p')
@@ -362,12 +394,16 @@ export default class InvoiceForm {
   }
 
   renderInvoices() {
+    // get all current invocies
     const allInvoices = this.service.getInvoices()
+
+    // filter invoices based on checkbox values
     const invoicesToRender = allInvoices.filter((invoice) => {
       if (this.state.activeFilters.length === 0) return true
       return this.state.activeFilters.includes(invoice.status)
     })
 
+    // handle plural nonplural invoice total
     if (this.elements.totalInvoices) {
       this.elements.totalInvoices.textContent = `There ${invoicesToRender.length !== 1 ? 'are' : 'is'} ${invoicesToRender.length} total invoice${invoicesToRender.length !== 1 ? 's' : ''}.`
     }
@@ -380,9 +416,11 @@ export default class InvoiceForm {
       this.elements.empty.style.display = 'none'
       this.elements.invoiceList.style.display = 'flex'
     }
+
     // clear list before rendering
     this.elements.invoiceList.innerHTML = ''
 
+    // render filtered invoices based on boxes checked from active filters
     invoicesToRender.forEach((invoice) => {
       const invoiceElement = document.createElement('div')
       invoiceElement.classList.add('invoice')
@@ -405,12 +443,14 @@ export default class InvoiceForm {
   }
 
   markAsPaid() {
+    // get id of invoice and set the status to paid
     const invoiceId = this.elements.invoiceDetailsContainer.dataset.id
     const invoice = this.service.getInvoiceById(invoiceId)
     invoice.status = 'paid'
     this.service.updateStatus(invoiceId, 'paid')
     this.renderInvoices()
 
+    // update status btn UI
     this.elements.statusBtn.textContent = 'Paid'
     this.elements.statusBtn.classList = 'btn-status h-s paid'
   }
@@ -439,24 +479,28 @@ export default class InvoiceForm {
       }
     })
 
+    // get all list items in item list of form
     const formListItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
 
+    // if there are none, isvalid is false, push error
     if (formListItems.length === 0) {
       isValid = false
       errors.push('An item must be added')
     } else {
+      // for each list item, check if inputs are empty
       formListItems.forEach((row, i) => {
         const nameInput = row.querySelector('input[name="item-name"]')
         const qtyInput = row.querySelector('input[name="item-qty"]')
         const priceInput = row.querySelector('input[name="item-price"]')
 
         ;[nameInput, qtyInput, priceInput].forEach((input) => {
+          // if empty add error border to input
           if (!input.value.trim()) {
             isValid = false
             input.classList.add('error-border')
           }
         })
-
+        // if any value is empty, push error to errors
         if (!nameInput.value || !qtyInput.value || !priceInput.value) {
           if (!errors.includes('All item fields must be filled')) {
             errors.push('All item fields must be filled')
@@ -464,26 +508,33 @@ export default class InvoiceForm {
         }
       })
     }
-
+    // render any errors if anything is invalid
     if (!isValid) {
       this.renderBottomErrors(errors)
     }
     return isValid
   }
+
   clearErrors() {
+    // get all inputs on form and remove error borders
     const inputs = this.elements.form.querySelectorAll('input')
     inputs.forEach((input) => {
       input.classList.remove('error-border')
     })
+
+    // remove all error messages
     const errorMsgs = this.elements.form.querySelectorAll('.field-error-msg')
     errorMsgs.forEach((msg) => msg.remove())
 
+    // empty errors container
     const errorContainer = this.elements.form.querySelector('.form-errors')
     errorContainer.innerHTML = ''
   }
   showInlineError(input) {
+    // add red border to empty input
     input.classList.add('error-border')
 
+    // grab closest label and render error span to display error msg above input
     const label = input.closest('label')
     if (label) {
       const errorSpan = document.createElement('span')
@@ -492,7 +543,9 @@ export default class InvoiceForm {
       label.appendChild(errorSpan)
     }
   }
+
   getFieldName(input) {
+    // get label text and trim
     const label = input.closest('label')
     if (label && label.childNodes[0]) {
       return label.childNodes[0].textContent.trim()
@@ -520,7 +573,9 @@ export default class InvoiceForm {
       errorContainer.appendChild(errorEl)
     })
   }
+
   populateForm(invoice) {
+    // get all non custom form fields
     const fields = {
       senderStreet: invoice.senderAddress.street,
       senderCity: invoice.senderAddress.city,
@@ -541,6 +596,8 @@ export default class InvoiceForm {
         input.value = value
       }
     })
+
+    // get custom input fields
     // set date input value and visual display
     const dateInput = this.elements.form.querySelector('input[name="createdAt"]')
     dateInput.value = invoice.createdAt
@@ -559,23 +616,31 @@ export default class InvoiceForm {
     // if 1 day, change to "Next 1 day"
     if (invoice.paymentTerms === '1') termsVisual.textContent = 'Next 1 day'
 
+    // for each form list item that exist in invoice
     invoice.items.forEach((item) => {
+      // create a new blank row
       this.addListItem()
+      // get the last row
       const rows = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
       const lastRow = rows[rows.length - 1]
 
+      // populate the last row with the correct input values
       lastRow.querySelector('input[name="item-name"]').value = item.name
       lastRow.querySelector('input[name="item-qty"]').value = item.quantity
       lastRow.querySelector('input[name="item-price"]').value = item.price
 
+      // trigger event to pass to handleItemInput to update total for the item
       const fakeEvent = { target: lastRow.querySelector('input[name="item-qty"]') }
       this.handleItemInput(fakeEvent)
     })
   }
   // helpers
   getFormData() {
+    // get current form data
     const formData = new FormData(this.elements.form)
+    // get the item list data
     const listItems = this.elements.listItemsContainer.querySelectorAll('.form-list-item')
+    // map through each item to get the item data
     const listItemsData = [...listItems].map((item) => {
       return {
         name: item.querySelector('input[name="item-name"]').value,
@@ -583,6 +648,7 @@ export default class InvoiceForm {
         price: Number(item.querySelector('input[name="item-price"]').value),
       }
     })
+    // convert formdata to object and add items to object
     const invoiceData = Object.fromEntries(formData)
     invoiceData.items = listItemsData
     return invoiceData
@@ -597,9 +663,11 @@ export default class InvoiceForm {
   }
 
   handleFilterChange() {
+    // get the checkboxes that are checked. if it is checked map the value to that checkbox (status: draft, pending or paid)
     const checkedValues = [...this.elements.filterCheckboxes]
       .filter((box) => box.checked)
       .map((box) => box.value)
+    // add the status' to active filters
     this.state.activeFilters = checkedValues
     this.renderInvoices()
   }
@@ -613,6 +681,7 @@ export default class InvoiceForm {
   }
 
   handleItemInput(e) {
+    // listen for change in any row input and update total
     const row = e.target.closest('.form-list-item')
     const totalEl = row.querySelector('.item-total p')
     const qty = Number(row.querySelector('input[name="item-qty"').value) || 0
