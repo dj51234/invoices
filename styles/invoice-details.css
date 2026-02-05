@@ -37,10 +37,10 @@
 
 .invoice-container .invoice-details-buttons--mobile {
   display: none;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   gap: 16px;
-  padding-block: 12px 24px;
+  padding: 12px 15px 24px 15px;
   background-color: #fff;
   width: 100%;
 }
