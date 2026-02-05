@@ -19,7 +19,10 @@ export default class InvoiceService {
       return {
         ...invoice,
         total: InvoiceService.formatCurrency(totalRaw),
-        paymentDue: InvoiceService.calculatePaymentDue(invoice.createdAt, invoice.paymentTerms),
+        paymentDue: InvoiceService.calculatePaymentDue(
+          invoice.createdAt,
+          invoice.paymentTerms
+        ),
         items: invoice.items.map((item) => {
           return {
             ...item,
@@ -67,15 +70,18 @@ export default class InvoiceService {
   }
   generateId() {
     const randomLetter = () => Math.floor(Math.random() * 26) + 65
-    const randomNum = () => String(Math.floor(Math.random() * 10000)).padStart(4, '0')
-    return `${String.fromCharCode(randomLetter())}${String.fromCharCode(randomLetter())}${randomNum()}`
+    const randomNum = () =>
+      String(Math.floor(Math.random() * 10000)).padStart(4, '0')
+    return `${String.fromCharCode(randomLetter())}${String.fromCharCode(
+      randomLetter()
+    )}${randomNum()}`
   }
 
   addInvoice(invoiceData) {
     const totalRaw = InvoiceService.calculateTotal(invoiceData.items)
     const paymentDue = InvoiceService.calculatePaymentDue(
       invoiceData.createdAt,
-      invoiceData.paymentTerms,
+      invoiceData.paymentTerms
     )
 
     // need to format the data to replicate json structure
@@ -132,7 +138,7 @@ export default class InvoiceService {
     // calculate the due date of the invoice
     const paymentDue = InvoiceService.calculatePaymentDue(
       invoiceData.createdAt,
-      invoiceData.paymentTerms,
+      invoiceData.paymentTerms
     )
 
     // update all values
@@ -169,7 +175,9 @@ export default class InvoiceService {
     this.saveInvoices()
   }
   deleteInvoice(id) {
-    const filteredInvoices = this.invoices.filter((invoice) => invoice.id !== id)
+    const filteredInvoices = this.invoices.filter(
+      (invoice) => invoice.id !== id
+    )
     this.invoices = filteredInvoices
     this.saveInvoices()
   }
