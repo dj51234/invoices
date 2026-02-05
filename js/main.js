@@ -36,7 +36,7 @@ if (selectDropdownEl) {
 
 // get default invoices from data.json
 async function fetchInvoices() {
-  const res = await fetch('./data.json')
+  const res = await fetch('./js/data.json')
   const data = await res.json()
 
   return data
